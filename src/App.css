@@ -10,8 +10,12 @@
 	font-style: normal;
 	font-size: 16;
 
-	max-width: 1280px;
 	margin: 0 auto;
 	padding: 2rem;
 	text-align: center;
+	@apply max-w-screen-lg;
+}
+
+a {
+	@apply italic underline decoration-1 underline-offset-2;
 }

@@ -6,7 +6,7 @@ export function Hr(props: HrProps) {
 	return (
 		<hr
 			className={
-				"clear-both h-px border-none bg-gradient-to-r from-transparent via-gray-100 to-transparent" +
+				"clear-both h-px border-none bg-gradient-to-r from-transparent via-gray-900 to-transparent" +
 				" " +
 				props.className
 			}
