@@ -3,12 +3,15 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Linden+Hill:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap");
 
 #root {
-	font-family: "Linden Hill", serif;
+	font-family: "Noto Serif Display", serif;
+	font-optical-sizing: auto;
 	font-weight: 400;
 	font-style: normal;
-	font-size: 16;
+	font-variation-settings: "wdth" 100;
 
 	margin: 0 auto;
 	padding: 2rem;
