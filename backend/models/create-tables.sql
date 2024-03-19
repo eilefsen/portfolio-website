@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS thought;
+
+CREATE TABLE `thought`(
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `heading` VARCHAR(255) NOT NULL,
+    `body` TEXT NOT NULL,
+    `datetime_created` DATETIME NOT NULL
+);
