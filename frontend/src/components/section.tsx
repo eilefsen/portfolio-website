@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactElement } from "react";
+import { PropsWithChildren } from "react";
 import { LeftHr } from "./util";
 
 interface SectionProps {
@@ -61,7 +61,7 @@ export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
 						{props.heading}
 					</a>
 				</h3>{" "}
-				{linkElements}
+				<span className="inline-flex gap-2 pl-1">{linkElements}</span>
 			</div>
 			<p className="hyphens-auto text-pretty text-justify text-xl">
 				{props.children}
