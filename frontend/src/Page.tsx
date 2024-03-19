@@ -60,7 +60,7 @@ export default function Page() {
 						Music player for the web. Built with React (MobX + react-router) and
 						Go.{" "}
 						<img
-							className="float-start me-2 mt-1 w-32 rounded-lg ring-1 ring-neutral-800"
+							className="float-start me-3 mt-1 w-32 rounded-sm ring-1 ring-neutral-800"
 							src="/dotify.jpg"
 							alt="A picture of Dotify on mobile"
 						/>
@@ -81,7 +81,7 @@ export default function Page() {
 						This is a fairly basic HTTP client for the ESP32. The
 						microcontroller drives a sh1106 OLED display.
 						<img
-							className="float-start me-2 mt-1 h-40 rounded-lg ring-1 ring-neutral-800"
+							className="float-start me-3 mt-1 h-40 rounded-sm ring-1 ring-neutral-800"
 							src="/esp_http_client.gif"
 							alt="A picture of Dotify on mobile"
 						/>{" "}
@@ -95,7 +95,11 @@ export default function Page() {
 					</Paragraph>
 				</Section>
 			</main>
-			<Section id="thoughts" heading="Thoughts" className="sm:columns-3">
+			<Section
+				id="thoughts"
+				heading="Some of my Thoughts"
+				className="sm:columns-3"
+			>
 				{thoughts}
 			</Section>
 		</>
