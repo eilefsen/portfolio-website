@@ -16,12 +16,29 @@ function App() {
 				<CentralHr />
 				<p className="flex justify-between bg-white px-6 pb-4 pt-2">
 					<span>
-						Email: <a href="mailto:emma@eilefsen.net">emma@eilefsen.net</a>
+						Email:{" "}
+						<a
+							className="text-blue-600 hover:text-blue-700"
+							href="mailto:emma@eilefsen.net"
+						>
+							emma@eilefsen.net
+						</a>
 					</span>
 					<span>
-						CV: <a href="/cv_english.pdf">English</a>
+						CV:{" "}
+						<a
+							className="text-blue-600 hover:text-blue-700"
+							href="/cv_english.pdf"
+						>
+							English
+						</a>
 						{", "}
-						<a href="/cv_english.pdf">Norwegian</a>
+						<a
+							className="text-blue-600 hover:text-blue-700"
+							href="/cv_english.pdf"
+						>
+							Norwegian
+						</a>
 					</span>
 				</p>
 			</footer>

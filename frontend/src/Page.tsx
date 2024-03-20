@@ -1,6 +1,7 @@
 import { useLoaderData } from "react-router";
 import { Paragraph, Section } from "./components/section";
 import { Thought } from "./router/loaders";
+import { ThoughtForm } from "./components/thoughtForm";
 
 export default function Page() {
 	const thoughtsData = useLoaderData() as Thought[];
@@ -20,7 +21,7 @@ export default function Page() {
 				<Section id="about" className="sm:columns-2">
 					<Paragraph heading="Who am i?">
 						<img
-							className="float-start me-16 mt-2 w-32 rounded-full ring-1 ring-neutral-800 [shape-outside:circle(30%)]"
+							className="float-start me-16 mt-2 w-32 rounded-full shadow-md shadow-neutral-400 [shape-outside:circle(30%)]"
 							src="/profile_pic.jpg"
 							alt="A picture of me!"
 						/>
@@ -41,7 +42,7 @@ export default function Page() {
 				<Section
 					id="projects"
 					heading="Cool stuff I've made"
-					className="sm:columns-2"
+					className="sm:columns-2 "
 				>
 					<Paragraph
 						heading="Dotify"
@@ -60,7 +61,7 @@ export default function Page() {
 						Music player for the web. Built with React (MobX + react-router) and
 						Go.{" "}
 						<img
-							className="float-start me-3 mt-1 w-32 rounded-sm ring-1 ring-neutral-800"
+							className="float-start me-3 mt-1 w-32 rounded-sm shadow-md shadow-neutral-400"
 							src="/dotify.jpg"
 							alt="A picture of Dotify on mobile"
 						/>
@@ -81,7 +82,7 @@ export default function Page() {
 						This is a fairly basic HTTP client for the ESP32. The
 						microcontroller drives a sh1106 OLED display.
 						<img
-							className="float-start me-3 mt-1 h-40 rounded-sm ring-1 ring-neutral-800"
+							className="float-start me-3 mt-1 h-40 rounded-sm shadow-md shadow-neutral-400"
 							src="/esp_http_client.gif"
 							alt="A picture of Dotify on mobile"
 						/>{" "}
@@ -102,6 +103,7 @@ export default function Page() {
 			>
 				{thoughts}
 			</Section>
+			<ThoughtForm />
 		</>
 	);
 }
