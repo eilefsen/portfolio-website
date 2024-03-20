@@ -8,19 +8,26 @@ interface SectionProps {
 }
 
 export function Section(props: PropsWithChildren<SectionProps>) {
-	let url;
+	const headingClassName = "-mb-0.5 inline w-full pt-8 text-left text-4xl";
+	let headingElement = <h2 className={headingClassName}>{props.heading}</h2>;
 	if (props.id) {
-		url = "/#" + props.id;
+		const url = "/#" + props.id;
+		headingElement = (
+			<div>
+				<h2 className={headingClassName}>
+					<a href={url} className="w-full no-underline hover:text-neutral-600">
+						{props.heading}
+					</a>
+				</h2>
+			</div>
+		);
 	}
+
 	return (
 		<section id={props.id}>
 			{props.heading && (
 				<>
-					<h2 className="-mb-0.5 pt-8 text-left text-4xl">
-						<a href={url} className="no-underline">
-							{props.heading}
-						</a>
-					</h2>
+					<h2 className={headingClassName}>{headingElement}</h2>
 					<LeftHr className="mb-2" />
 				</>
 			)}
@@ -45,7 +52,11 @@ export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
 	if (props.links) {
 		for (const link of props.links) {
 			const el = (
-				<a key={link.url} href={link.url}>
+				<a
+					key={link.url}
+					href={link.url}
+					className="text-blue-600 hover:text-blue-700"
+				>
 					{link.text}
 				</a>
 			);
@@ -53,14 +64,19 @@ export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
 		}
 	}
 
+	let headingElement = <>{props.heading}</>;
+	if (props.url) {
+		headingElement = (
+			<a className="no-underline" href={props.url}>
+				{props.heading}
+			</a>
+		);
+	}
+
 	return (
 		<div className="break-inside-avoid-column pb-4 ">
 			<div className="text-left">
-				<h3 className="inline text-2xl font-bold">
-					<a className="no-underline" href={props.url}>
-						{props.heading}
-					</a>
-				</h3>{" "}
+				<h3 className="inline text-2xl font-bold">{headingElement}</h3>{" "}
 				<span className="inline-flex gap-2 pl-1">{linkElements}</span>
 			</div>
 			<p className="hyphens-auto text-pretty text-justify text-xl">
