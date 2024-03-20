@@ -74,7 +74,7 @@ export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
 	}
 
 	return (
-		<div className="break-inside-avoid-column pb-4 ">
+		<div className="break-inside-avoid-column pb-4">
 			<div className="text-left">
 				<h3 className="inline text-2xl font-bold">{headingElement}</h3>{" "}
 				<span className="inline-flex gap-2 pl-1">{linkElements}</span>
