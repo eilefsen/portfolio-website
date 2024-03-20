@@ -15,11 +15,14 @@ func InitDB(dataSourceName string) error {
 	return db.Ping()
 }
 
-type Thought struct {
+type ThoughtNoID struct {
 	Heading         string `json:"heading"`
 	Body            string `json:"body"`
 	DateTimeCreated string `json:"dateTimeCreated"`
-	ID              uint32 `json:"id"`
+}
+type Thought struct {
+	ThoughtNoID
+	ID uint32 `json:"id"`
 }
 
 func AllThoughts() ([]Thought, error) {
@@ -49,4 +52,20 @@ func AllThoughts() ([]Thought, error) {
 		return nil, ErrResourceNotFound
 	}
 	return thoughts, err
+}
+
+func NewThought(thought ThoughtNoID) error {
+	rows, err := db.Query(
+		`INSERT INTO thought (heading, body, datetime_created) VALUES ( ?, ?, ?)`,
+		thought.Heading,
+		thought.Body,
+		thought.DateTimeCreated,
+	)
+	if err != nil {
+		return err
+	}
+	if err := rows.Err(); err != nil {
+		return err
+	}
+	return err
 }

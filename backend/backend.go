@@ -44,6 +44,7 @@ func main() {
 			http.Error(w, "You've been rate limited", http.StatusTooManyRequests)
 		}),
 	))
-	rt.Get("/api/thoughts", FetchAllThoughts)
+	rt.Get("/api/thoughts", fetchAllThoughts)
+	rt.Post("/api/thoughts/create", createThought)
 	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
 }
