@@ -1,8 +1,20 @@
 "use client";
-import { LeftHr } from "./util";
+import { CentralHr, LeftHr } from "./util";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import {
+	Form,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormControl,
+	FormDescription,
+	FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 const formSchema = z.object({
 	heading: z.string().min(2).max(50),
@@ -20,29 +32,16 @@ export function ThoughtForm() {
 		},
 	});
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-
-		const form = e.currentTarget;
-
-		const finalFormEndpoint = form.action;
-		const formElements = form.elements as typeof form.elements & {
-			heading: HTMLInputElement;
-			body: HTMLInputElement;
-		};
-		const data = {
-			heading: formElements.heading.value,
-			body: formElements.body.value,
-			dateTimeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
-		};
-
-		fetch(finalFormEndpoint, {
+	function onSubmit(values: z.infer<typeof formSchema>) {
+		// Do something with the form values.
+		// ✅ This will be type-safe and validated.
+		fetch("/api/thoughts/create", {
 			method: "POST",
 			headers: {
 				Accept: "application/json",
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(data),
+			body: JSON.stringify(values),
 		}).then((response) => {
 			if (response.status !== 200) {
 				throw new Error(response.statusText);
@@ -50,42 +49,51 @@ export function ThoughtForm() {
 
 			return response.json();
 		});
-	}
-
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
 		console.log(values);
 	}
 
 	return (
-		<div className="w-full max-w-96 text-justify">
-			<h2 className="-mb-1 text-2xl">Submit new Thought</h2>
-			<LeftHr className="mb-1.5 from-neutral-500" />
+		<Form {...form}>
+			<h2 className="-mb-0.5 text-2xl">Submit new Thought</h2>
+			<CentralHr className="mb-3 via-neutral-400" />
 			<form
-				className="grid grid-cols-[25%_75%] grid-rows-2 gap-2"
-				method="POST"
-				action="/api/thoughts/create"
-				onSubmit={handleSubmit}
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
 			>
-				<label htmlFor="heading" className="text-lg font-bold">
-					Heading
-				</label>
-				<input
+				<FormField
+					control={form.control}
 					name="heading"
-					type="text"
-					className="rounded-sm border border-neutral-400"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel hidden>Heading</FormLabel>
+							<FormControl>
+								<Input placeholder="Heading" {...field} />
+							</FormControl>
+							<FormDescription hidden>
+								This is the heading of the thought you are submitting
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
 				/>
-				<label htmlFor="body" className="text-lg font-bold">
-					Body
-				</label>
-				<input
+				<FormField
+					control={form.control}
 					name="body"
-					type="text"
-					className="rounded-sm border border-neutral-400"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel hidden>Body</FormLabel>
+							<FormControl>
+								<Textarea placeholder="Body" {...field} />
+							</FormControl>
+							<FormDescription hidden>
+								This is the heading of the thought you are submitting
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
 				/>
-				<input type="submit" className="sm:hidden" />
+				<Button type="submit">Submit</Button>
 			</form>
-		</div>
+		</Form>
 	);
 }
