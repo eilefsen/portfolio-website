@@ -45,6 +45,6 @@ func main() {
 		}),
 	))
 	rt.Get("/api/thoughts", fetchAllThoughts)
-	rt.Post("/api/thoughts/create", createThought)
+	rt.Post("/api/thoughts/create", BasicAuth(createThought))
 	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
 }
