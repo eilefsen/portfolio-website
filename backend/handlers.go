@@ -38,9 +38,15 @@ func createThought(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.NewThought(t)
+	insertedThought, err := models.NewThought(t)
 	if err != nil {
 		slog.Error(err.Error())
 	}
-	slog.Debug("createThought", "thought", t)
+	responseJSON, err := json.Marshal(insertedThought)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+	slog.Debug("createThought", "thought", t, "insertedThought", insertedThought, "responseJSON", string(responseJSON))
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
 }

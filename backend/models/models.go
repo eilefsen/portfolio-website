@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"log/slog"
 )
 
 var db *sql.DB
@@ -73,18 +74,23 @@ func AllThoughts() ([]Thought, error) {
 	return thoughts, err
 }
 
-func NewThought(thought ThoughtNoID) error {
-	rows, err := db.Query(
+func NewThought(thought ThoughtNoID) (Thought, error) {
+	var t Thought
+	res, err := db.Exec(
 		`INSERT INTO thought (heading, body, datetime_created) VALUES ( ?, ?, ?)`,
 		thought.Heading,
 		thought.Body,
 		thought.DateTimeCreated,
 	)
 	if err != nil {
-		return err
+		return t, err
 	}
-	if err := rows.Err(); err != nil {
-		return err
+	id, err := res.LastInsertId()
+	if err != nil {
+		return t, err
 	}
-	return err
+	t.ID = uint32(id)
+	t.ThoughtNoID = thought
+	slog.Info("models.NewThought", "t", t)
+	return t, nil
 }
