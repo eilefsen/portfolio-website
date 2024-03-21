@@ -2,7 +2,7 @@
 import { CentralHr, LeftHr } from "./util";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
 	Form,
 	FormField,
@@ -22,7 +22,11 @@ const formSchema = z.object({
 	dateTimeCreated: z.string().min(19).max(19),
 });
 
-export function ThoughtForm() {
+interface ThoughtFormProps {
+	onSubmit?: (values: z.infer<typeof formSchema>) => void;
+}
+
+export function ThoughtForm(props: ThoughtFormProps) {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -49,7 +53,9 @@ export function ThoughtForm() {
 
 			return response.json();
 		});
-		console.log(values);
+		if (props.onSubmit) {
+			props.onSubmit(values);
+		}
 	}
 
 	return (

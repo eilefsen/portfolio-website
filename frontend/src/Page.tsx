@@ -1,18 +1,21 @@
 import { useLoaderData } from "react-router";
 import { Paragraph, Section } from "./components/section";
-import { Thought } from "./router/loaders";
+import { Thought, ThoughtNoID } from "./router/loaders";
 import { ThoughtForm } from "./components/thoughtForm";
+
+function ThoughtElement(props: Thought) {
+	return (
+		<Paragraph heading={props.heading} key={props.id}>
+			{props.body}
+		</Paragraph>
+	);
+}
 
 export default function Page() {
 	const thoughtsData = useLoaderData() as Thought[];
 	const thoughts = [];
 	for (const t of thoughtsData) {
-		const el = (
-			<Paragraph heading={t.heading} key={t.id}>
-				{t.body}
-			</Paragraph>
-		);
-		thoughts.push(el);
+		thoughts.push(<ThoughtElement {...t} />);
 	}
 
 	return (
@@ -99,7 +102,7 @@ export default function Page() {
 			<Section
 				id="thoughts"
 				heading="Some of my Thoughts"
-				className="sm:columns-4"
+				className="columns-2 sm:columns-4"
 			>
 				{thoughts}
 			</Section>
