@@ -45,6 +45,7 @@ export interface ParagraphProps {
 	heading?: string;
 	url?: string;
 	links?: Array<LinkObject>;
+	date?: string;
 }
 
 export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
@@ -77,6 +78,7 @@ export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
 		<div className="break-inside-avoid-column pb-4">
 			<div className="text-left">
 				<h3 className="inline text-2xl font-bold">{headingElement}</h3>{" "}
+				<span className="pl-1 text-neutral-500">{props.date}</span>
 				<span className="inline-flex gap-2 pl-1">{linkElements}</span>
 			</div>
 			<p className="hyphens-auto text-pretty text-justify text-xl">

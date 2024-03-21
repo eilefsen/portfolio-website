@@ -2,22 +2,10 @@ import { useLoaderData } from "react-router";
 import { Paragraph, Section } from "./components/section";
 import { Thought, ThoughtNoID } from "./router/loaders";
 import { ThoughtForm } from "./components/thoughtForm";
-
-function ThoughtElement(props: Thought) {
-	return (
-		<Paragraph heading={props.heading} key={props.id}>
-			{props.body}
-		</Paragraph>
-	);
-}
+import { SadGirlsRingBanner } from "./components/sadgirlsring";
+import { ThoughtElement, ThoughtsSection } from "./components/thoughts/section";
 
 export default function Page() {
-	const thoughtsData = useLoaderData() as Thought[];
-	const thoughts = [];
-	for (const t of thoughtsData) {
-		thoughts.push(<ThoughtElement {...t} />);
-	}
-
 	return (
 		<>
 			<main className="mx-auto min-h-[300px] px-4">
@@ -98,15 +86,8 @@ export default function Page() {
 						play, skip, seek. It is a full fledged music application.
 					</Paragraph>
 				</Section>
+				<ThoughtsSection />
 			</main>
-			<Section
-				id="thoughts"
-				heading="Some of my Thoughts"
-				className="columns-2 sm:columns-4"
-			>
-				{thoughts}
-			</Section>
-			<ThoughtForm />
 		</>
 	);
 }
