@@ -7,6 +7,7 @@ require (
 	github.com/go-chi/httprate v0.9.0
 	github.com/go-sql-driver/mysql v1.8.0
 	github.com/lmittmann/tint v1.0.4
+	golang.org/x/crypto v0.21.0
 )
 
 require (
