@@ -76,14 +76,15 @@ export default function Page() {
 						Music player for the web. Built with React (MobX + react-router) and
 						Go.{" "}
 						<img
-							className="float-start me-3 mt-1 w-32 rounded-sm shadow-md shadow-neutral-400"
+							className="float-start me-3 mt-1 h-48 rounded-sm shadow-md shadow-neutral-400"
 							src="/dotify.jpg"
 							alt="A picture of Dotify on mobile"
 						/>
-						The songs are both stored as simple audio files in static storage,
-						and metadata along with the local path to each file is stored in the
+						The songs are stored as simple audio files in static storage, and
+						metadata along with the local path to each file is stored in the
 						database. You can browse by artists, albums, and all songs. You can
-						play, skip, seek. It is a full fledged music application.
+						play, skip, seek. It is a full fledged music application. This
+						project took me around a month to complete the initial version.
 					</Paragraph>
 				</Section>
 				<ThoughtsSection />

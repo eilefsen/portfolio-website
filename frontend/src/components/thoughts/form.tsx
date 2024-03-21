@@ -15,6 +15,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosResponse } from "axios";
+import { Thought, ThoughtNoID } from "@/router/loaders";
 
 const formSchema = z.object({
 	heading: z.string().min(2).max(50),
@@ -36,26 +39,23 @@ export function ThoughtForm(props: ThoughtFormProps) {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		fetch("/api/thoughts/create", {
-			method: "POST",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(values),
-		}).then((response) => {
-			if (response.status !== 200) {
-				throw new Error(response.statusText);
-			}
+	const queryClient = useQueryClient();
 
-			return response.json();
-		});
-		if (props.onSubmit) {
-			props.onSubmit();
-		}
+	const mutation = useMutation({
+		mutationFn: (newThought: ThoughtNoID) => {
+			return axios.post("/api/thoughts/create", newThought);
+		},
+		onSuccess: (data: AxiosResponse<Thought>) => {
+			let old: Thought[] | undefined = queryClient.getQueryData(["thoughts"]);
+			if (!old) {
+				old = [];
+			}
+			queryClient.setQueryData(["thoughts"], [...old, data.data]);
+		},
+	});
+
+	function onSubmit(values: z.infer<typeof formSchema>) {
+		mutation.mutate(values);
 	}
 
 	return (

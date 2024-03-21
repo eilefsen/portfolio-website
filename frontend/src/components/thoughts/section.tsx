@@ -1,7 +1,7 @@
 import { ThoughtNoID, fetchAllThoughts } from "@/router/loaders";
-import { Paragraph, Section } from "../section";
-import { ThoughtForm } from "../thoughtForm";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Paragraph, Section } from "@/components/section";
+import { ThoughtForm } from "./form";
+import { useQuery } from "@tanstack/react-query";
 
 export function ThoughtElement(props: ThoughtNoID) {
 	return (
@@ -31,9 +31,14 @@ export function ThoughtsSection() {
 	if (result.isSuccess) {
 		thoughts = (
 			<>
-				{result.data.map((t) => <ThoughtElement {...t} key={t.id} />).reverse()}
+				{result.data
+					?.map((t) => <ThoughtElement {...t} key={t.id} />)
+					.reverse()}
 			</>
 		);
+	}
+	if (!result.data) {
+		thoughts = <h3 className="text-left text-xl">No thoughts available yet</h3>;
 	}
 
 	return (
