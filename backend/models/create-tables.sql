@@ -1,8 +1,15 @@
 DROP TABLE IF EXISTS thought;
+DROP TABLE IF EXISTS user;
 
 CREATE TABLE `thought`(
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `heading` VARCHAR(255) NOT NULL,
     `body` TEXT NOT NULL,
     `datetime_created` DATETIME NOT NULL
+);
+
+CREATE TABLE `user` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `username` TEXT NOT NULL,
+    `password` TEXT NOT NULL
 );

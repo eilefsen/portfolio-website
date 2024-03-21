@@ -24,6 +24,25 @@ type Thought struct {
 	ThoughtNoID
 	ID uint32 `json:"id"`
 }
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	ID       uint32 `json:"id"`
+}
+
+func GetUser(id uint32) (User, error) {
+	var u User
+	row := db.QueryRow("select * from user where user.id = ?", id)
+	err := row.Scan(
+		&u.ID,
+		&u.Username,
+		&u.Password,
+	)
+	if err != nil {
+		return User{}, err
+	}
+	return u, err
+}
 
 func AllThoughts() ([]Thought, error) {
 	var thoughts []Thought
