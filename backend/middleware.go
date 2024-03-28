@@ -10,28 +10,43 @@ import (
 
 func BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		username, password, ok := r.BasicAuth()
-
+		var creds models.Credentials
+		var ok bool
+		creds.Username, creds.Password, ok = r.BasicAuth()
 		if !ok {
 			unauthorizedHandler(w)
 			return
 		}
 
-		superuser, err := models.GetUser(1)
-		if err != nil {
-			slog.Error("Could not get superuser.", "ID", 1)
-		}
-
-		err = bcrypt.CompareHashAndPassword([]byte(superuser.Password), []byte(password))
-		if err != nil {
+		users, err := models.GetUsersByName(creds.Username)
+		if err == models.ErrResourceNotFound {
+			slog.Error("login: No users found", "error", err)
 			unauthorizedHandler(w)
-		}
-
-		if superuser.Username == username {
-			next.ServeHTTP(w, r)
 			return
 		}
-		unauthorizedHandler(w)
+		if err != nil {
+			slog.Error("Could not get user", "username", creds.Username)
+			unauthorizedHandler(w)
+			return
+		}
+
+		if len(users) > 1 {
+			slog.Info("Multiple users with the same name, defaulting to the lowest ID", "name", creds.Username)
+		}
+		u := users[0]
+		for _, user := range users {
+			if user.ID < u.ID {
+				u = user
+			}
+		}
+
+		err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(creds.Password))
+		if err != nil {
+			unauthorizedHandler(w)
+			return
+		}
+
+		next.ServeHTTP(w, r)
 	})
 }
 
