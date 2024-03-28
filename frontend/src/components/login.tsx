@@ -13,7 +13,7 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ThoughtNoID, Thought } from "@/router/loaders";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 
 const formSchema = z.object({
@@ -35,14 +35,10 @@ export function LoginForm(props: LoginFormProps) {
 	const mutation = useMutation({
 		mutationFn: (val: z.infer<typeof formSchema>) => {
 			form.reset();
-			return axios.post("/api/thoughts/create", val);
+			return axios.post("/api/auth/login", val);
 		},
-		onSuccess: (data: AxiosResponse<Thought>) => {
-			let old: Thought[] | undefined = queryClient.getQueryData(["thoughts"]);
-			if (!old) {
-				old = [];
-			}
-			queryClient.setQueryData(["thoughts"], [...old, data.data]);
+		onSuccess: (data: AxiosResponse<string>) => {
+			queryClient.setQueryData(["token"], data);
 		},
 	});
 
