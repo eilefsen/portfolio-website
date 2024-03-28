@@ -25,9 +25,7 @@ const formSchema = z.object({
 	dateTimeCreated: z.string().min(19).max(19),
 });
 
-interface ThoughtFormProps {
-	onSubmit?: () => void;
-}
+interface ThoughtFormProps {}
 
 export function ThoughtForm(props: ThoughtFormProps) {
 	const form = useForm<z.infer<typeof formSchema>>({
