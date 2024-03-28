@@ -32,7 +32,8 @@ type Credentials struct {
 }
 type User struct {
 	Credentials
-	ID uint32 `json:"id"`
+	SuperUser bool   `json:"superuser"`
+	ID        uint32 `json:"id"`
 }
 
 func GetUser(id uint32) (User, error) {
@@ -42,6 +43,7 @@ func GetUser(id uint32) (User, error) {
 		&u.ID,
 		&u.Username,
 		&u.Password,
+		&u.SuperUser,
 	)
 	if err != nil {
 		return User{}, err
