@@ -41,6 +41,7 @@ export function ThoughtForm(props: ThoughtFormProps) {
 
 	const mutation = useMutation({
 		mutationFn: (newThought: ThoughtNoID) => {
+			form.reset();
 			return axios.post("/api/thoughts/create", newThought);
 		},
 		onSuccess: (data: AxiosResponse<Thought>) => {
