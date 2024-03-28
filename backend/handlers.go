@@ -18,6 +18,8 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+var jwtKey = []byte(os.Getenv("JWT_SECRET_KEY"))
+
 func login(w http.ResponseWriter, r *http.Request) {
 	var creds models.Credentials
 
@@ -57,7 +59,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jwtKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 	expirationTime := time.Now().Add(5 * time.Minute)
 	claims := Claims{
 		Username: u.Username,
@@ -71,11 +72,46 @@ func login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",
 		Value:   tokenString,
 		Expires: expirationTime,
 	})
+}
+
+func authStatus(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		// For any other type of error, return a bad request status
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	tokenString := c.Value
+	claims := &Claims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (any, error) {
+		return jwtKey, nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func fetchAllThoughts(w http.ResponseWriter, r *http.Request) {
