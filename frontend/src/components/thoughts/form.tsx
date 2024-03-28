@@ -18,6 +18,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 import { Thought, ThoughtNoID } from "@/router/loaders";
+import { TokenContext } from "../login";
+import { useContext } from "react";
 
 const formSchema = z.object({
 	heading: z.string().min(2).max(50),
@@ -38,11 +40,20 @@ export function ThoughtForm(props: ThoughtFormProps) {
 	});
 
 	const queryClient = useQueryClient();
+	const [token, setToken] = useContext(TokenContext);
 
 	const mutation = useMutation({
 		mutationFn: (newThought: ThoughtNoID) => {
 			form.reset();
-			return axios.post("/api/thoughts/create", newThought);
+			let bearer = "";
+			if (token) {
+				bearer = "Bearer " + token;
+			}
+			return axios.post("/api/thoughts/create", newThought, {
+				headers: {
+					Authorization: bearer,
+				},
+			});
 		},
 		onSuccess: (data: AxiosResponse<Thought>) => {
 			let old: Thought[] | undefined = queryClient.getQueryData(["thoughts"]);

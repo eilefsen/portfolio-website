@@ -12,9 +12,12 @@ import {
 } from "./ui/form";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ThoughtNoID, Thought } from "@/router/loaders";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { Dispatch, SetStateAction, createContext, useContext } from "react";
+
+type TokenContextType = [string, Dispatch<SetStateAction<string>>];
+export const TokenContext = createContext<TokenContextType>(["", () => {}]);
 
 const formSchema = z.object({
 	username: z.string().min(2).max(250),
@@ -23,7 +26,7 @@ const formSchema = z.object({
 
 interface LoginFormProps {}
 export function LoginForm(props: LoginFormProps) {
-	const queryClient = useQueryClient();
+	const [token, setToken] = useContext(TokenContext);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -33,12 +36,15 @@ export function LoginForm(props: LoginFormProps) {
 	});
 
 	const mutation = useMutation({
-		mutationFn: (val: z.infer<typeof formSchema>) => {
+		mutationKey: ["login"],
+		mutationFn: async (val: z.infer<typeof formSchema>) => {
 			form.reset();
-			return axios.post("/api/auth/login", val);
-		},
-		onSuccess: (data: AxiosResponse<string>) => {
-			queryClient.setQueryData(["token"], data);
+			const res = await axios.post("/api/auth/login", val);
+			setToken(res.data);
+			document.cookie = "jwt=" + res.data;
+			console.log(res, document.cookie);
+			console.log(res.request);
+			return res;
 		},
 	});
 

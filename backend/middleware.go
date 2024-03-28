@@ -3,8 +3,10 @@ package main
 import (
 	"log/slog"
 	"net/http"
+	"strings"
 
 	"eilefsen.net/backend/models"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -46,6 +48,46 @@ func BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
+		next.ServeHTTP(w, r)
+	})
+}
+
+func TokenAuth(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenString := r.Header.Get("Authorization")
+		if tokenString == "" || tokenString == "Bearer" {
+			cookie, err := r.Cookie("jwt")
+			tokenString = cookie.Value
+			if err != nil {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+		}
+		tokenString = strings.ReplaceAll(tokenString, "Bearer ", "")
+		slog.Debug("TokenAuth:", "tokenString", tokenString)
+
+		claims := &Claims{}
+		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (any, error) {
+			return jwtKey, nil
+		})
+		if err != nil {
+			if err == jwt.ErrTokenInvalidClaims {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			if err == jwt.ErrSignatureInvalid {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			slog.Error(err.Error())
+			slog.Error("TokenAuth:", "err", err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if !token.Valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
 		next.ServeHTTP(w, r)
 	})
 }

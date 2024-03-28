@@ -50,7 +50,7 @@ export function ThoughtsSection() {
 			>
 				{thoughts}
 			</Section>
-			<ThoughtForm onSubmit={() => result.refetch()} />
+			<ThoughtForm />
 		</>
 	);
 }

@@ -10,7 +10,6 @@ import (
 	"eilefsen.net/backend/models"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
-	// "github.com/golang-jwt/jwt/v5"
 )
 
 type Claims struct {
@@ -22,6 +21,7 @@ var jwtKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 
 func login(w http.ResponseWriter, r *http.Request) {
 	var creds models.Credentials
+	
 
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
@@ -74,44 +74,13 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	http.SetCookie(w, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-	})
-}
-
-func authStatus(w http.ResponseWriter, r *http.Request) {
-	c, err := r.Cookie("token")
+	responseJSON, err := json.Marshal(tokenString)
 	if err != nil {
-		if err == http.ErrNoCookie {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		// For any other type of error, return a bad request status
-		w.WriteHeader(http.StatusBadRequest)
-		return
+		slog.Error(err.Error())
 	}
 
-	tokenString := c.Value
-	claims := &Claims{}
-
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (any, error) {
-		return jwtKey, nil
-	})
-	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if !token.Valid {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
 }
 
 func fetchAllThoughts(w http.ResponseWriter, r *http.Request) {

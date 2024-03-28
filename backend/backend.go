@@ -14,12 +14,13 @@ import (
 	"github.com/lmittmann/tint"
 )
 
-func main() {
+func init() {
 	slog.SetDefault(slog.New(
 		tint.NewHandler(os.Stdout, &tint.Options{
 			Level: slog.LevelDebug,
 		}),
 	))
+
 	dbcfg := mysql.Config{
 		User:                 os.Getenv("DBUSER"),
 		Passwd:               os.Getenv("DBPASS"),
@@ -34,7 +35,9 @@ func main() {
 		os.Exit(1)
 	}
 	slog.Info("DB connected.", "Addr", dbcfg.Addr, "DBName", dbcfg.DBName)
+}
 
+func main() {
 	rt := chi.NewRouter()
 	rt.Use(middleware.Logger)
 	rt.Use(httprate.Limit(
@@ -44,9 +47,18 @@ func main() {
 			http.Error(w, "You've been rate limited", http.StatusTooManyRequests)
 		}),
 	))
-	rt.Get("/api/thoughts", fetchAllThoughts)
-	rt.Post("/api/auth/login", login)
-	rt.Post("/api/auth/status", authStatus)
-	rt.Post("/api/thoughts/create", BasicAuth(createThought))
+
+	// protected routes
+	rt.Group(func(r chi.Router) {
+		rt.Post("/api/thoughts/create", TokenAuth(createThought))
+		rt.Post("/api/auth/status", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		})
+	})
+	// unprotected routes
+	rt.Group(func(r chi.Router) {
+		rt.Get("/api/thoughts", fetchAllThoughts)
+		rt.Post("/api/auth/login", login)
+	})
 	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
 }
