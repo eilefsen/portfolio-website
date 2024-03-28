@@ -25,10 +25,14 @@ type Thought struct {
 	ThoughtNoID
 	ID uint32 `json:"id"`
 }
-type User struct {
+
+type Credentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	ID       uint32 `json:"id"`
+}
+type User struct {
+	Credentials
+	ID uint32 `json:"id"`
 }
 
 func GetUser(id uint32) (User, error) {
