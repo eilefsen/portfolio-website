@@ -3,12 +3,26 @@ import { CentralHr } from "./components/util";
 import { RouterProvider } from "react-router-dom";
 
 import router from "./router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+	QueryClient,
+	QueryClientProvider,
+	useQuery,
+} from "@tanstack/react-query";
 import { LoginForm } from "./components/login";
+import axios from "axios";
 
 const queryClient = new QueryClient();
 
 function App() {
+	const isLoggedIn = useQuery({
+		queryKey: ["authStatus"],
+		queryFn: async () => {
+			const res = await axios.post("/api/auth/status");
+			return res.status == 200;
+		},
+		staleTime: 240000, // 4 minutes
+	});
+
 	return (
 		<QueryClientProvider client={queryClient}>
 			<header className="pb-4">
@@ -16,6 +30,7 @@ function App() {
 				<CentralHr />
 			</header>
 			<RouterProvider router={router} />
+			<LoginForm />
 			<footer className="sticky bottom-0 pt-6">
 				<CentralHr />
 				<p className="flex justify-between bg-white px-6 pb-4 pt-2">
@@ -46,7 +61,6 @@ function App() {
 					</span>
 				</p>
 			</footer>
-			<LoginForm></LoginForm>
 		</QueryClientProvider>
 	);
 }
