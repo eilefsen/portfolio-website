@@ -56,6 +56,10 @@ func login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 }
 
+func authStatusHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
 func fetchAllThoughts(w http.ResponseWriter, r *http.Request) {
 	thoughts, err := models.AllThoughts()
 	if err == models.ErrResourceNotFound {
