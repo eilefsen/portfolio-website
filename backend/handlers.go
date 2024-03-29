@@ -57,14 +57,18 @@ func login(w http.ResponseWriter, r *http.Request) {
 		slog.Error("login:", "err", err)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	responseJSON, err := json.Marshal(tokenString)
-	if err != nil {
-		slog.Error(err.Error())
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    tokenString,
+		HttpOnly: true,
+		Path:     "/",
+		Expires:  tokenExpire,
+		// Secure:   true, // enable for production
+		SameSite: http.SameSiteLaxMode,
+		Domain:   os.Getenv("DOMAIN"),
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(responseJSON)
+	http.SetCookie(w, &cookie)
 }
 
 func fetchAllThoughts(w http.ResponseWriter, r *http.Request) {
