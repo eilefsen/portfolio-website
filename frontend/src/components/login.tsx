@@ -41,9 +41,6 @@ export function LoginForm(props: LoginFormProps) {
 			form.reset();
 			const res = await axios.post("/api/auth/login", val);
 			setToken(res.data);
-			document.cookie = "jwt=" + res.data;
-			console.log(res, document.cookie);
-			console.log(res.request);
 			return res;
 		},
 	});
