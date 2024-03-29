@@ -176,17 +176,19 @@ func authStatusHandler(w http.ResponseWriter, r *http.Request) {
 func fetchAllThoughts(w http.ResponseWriter, r *http.Request) {
 	thoughts, err := models.AllThoughts()
 	if err == models.ErrResourceNotFound {
-		slog.Error("FetchAllThoughts: No thoughts found", "error", err)
 		w.WriteHeader(http.StatusNoContent)
 		return
-	}
-	if err != nil {
+	} else if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	responseJSON, err := json.Marshal(thoughts)
 	if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
