@@ -1,16 +1,31 @@
+import { loginStatusContext } from "@/App";
 import { Section, Paragraph } from "@/components/section";
+import { ThoughtForm } from "@/components/thoughts/form";
 import { ThoughtsSection } from "@/components/thoughts/section";
+import { useQueryClient } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { useContext } from "react";
 
 export const Route = createLazyFileRoute("/")({
 	component: Index,
 });
 
 function Index() {
-	return <MainPage />;
+	let loginStatus = useQueryClient().getQueryData(["loginStatus"]);
+	// if (loginStatus == undefined) {
+	// 	loginStatus = false;
+	// }
+	console.log(loginStatus);
+	return (
+		<>
+			<StaticPage />
+			<ThoughtsSection />
+			<ThoughtForm />
+		</>
+	);
 }
 
-function MainPage() {
+function StaticPage() {
 	return (
 		<>
 			<Section id="about" className="sm:columns-2">
@@ -91,7 +106,6 @@ function MainPage() {
 					took me around a month to complete the initial version.
 				</Paragraph>
 			</Section>
-			<ThoughtsSection />
 		</>
 	);
 }

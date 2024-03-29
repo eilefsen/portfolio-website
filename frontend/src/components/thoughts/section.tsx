@@ -1,5 +1,4 @@
 import { Paragraph, Section } from "@/components/section";
-import { ThoughtForm } from "./form";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Thought, ThoughtNoID } from "./types";
@@ -54,7 +53,6 @@ export function ThoughtsSection() {
 			>
 				{thoughts}
 			</Section>
-			<ThoughtForm />
 		</>
 	);
 }
