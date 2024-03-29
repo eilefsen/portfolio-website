@@ -1,7 +1,7 @@
 package main
 
 import (
-	"os"
+	"fmt"
 	"time"
 
 	"eilefsen.net/backend/models"
@@ -11,7 +11,8 @@ import (
 
 type CustomClaims struct {
 	jwt.RegisteredClaims
-	SuperUser bool `json:"superUser"`
+	UserName  string `json:"username"`
+	SuperUser bool   `json:"superuser"`
 }
 
 type JWTSettings struct {
@@ -37,13 +38,27 @@ func NewToken(u models.User) *jwt.Token {
 	return token
 }
 
-func NewTokenString(u models.User, expirationTime time.Time) (string, error) {
+func NewAccessTokenString(u models.User, expirationTime time.Time) (string, error) {
 	claims := CustomClaims{
 		SuperUser: u.SuperUser,
+		UserName:  u.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject:   u.Username,
+			Subject:   fmt.Sprint(u.ID),
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
+	}
+	token := jwt.NewWithClaims(settings.SigningMethod, claims)
+	tokenString, err := token.SignedString(settings.Key)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
+}
+
+func NewRefreshTokenString(u models.User, expirationTime time.Time) (string, error) {
+	claims := jwt.RegisteredClaims{
+		Subject:   fmt.Sprint(u.ID),
+		ExpiresAt: jwt.NewNumericDate(expirationTime),
 	}
 	token := jwt.NewWithClaims(settings.SigningMethod, claims)
 	tokenString, err := token.SignedString(settings.Key)
