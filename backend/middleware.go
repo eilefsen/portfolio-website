@@ -79,7 +79,7 @@ func SuperUserAuth(next http.HandlerFunc) http.HandlerFunc {
 func getTokenStringFromRequest(r *http.Request) (string, error) {
 	tokenString := r.Header.Get("Authorization")
 	if tokenString == "" || tokenString == "Bearer" {
-		cookie, err := r.Cookie("token")
+		cookie, err := r.Cookie("access_token")
 		tokenString = cookie.Value
 		if err != nil {
 			return "", err
