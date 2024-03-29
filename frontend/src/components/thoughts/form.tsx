@@ -18,8 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 import { Thought, ThoughtNoID } from "@/router/loaders";
-import { TokenContext } from "../login";
-import { useContext } from "react";
 
 const formSchema = z.object({
 	heading: z.string().min(2).max(50),
@@ -27,9 +25,7 @@ const formSchema = z.object({
 	dateTimeCreated: z.string().min(19).max(19),
 });
 
-interface ThoughtFormProps {}
-
-export function ThoughtForm(props: ThoughtFormProps) {
+export function ThoughtForm() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -40,23 +36,15 @@ export function ThoughtForm(props: ThoughtFormProps) {
 	});
 
 	const queryClient = useQueryClient();
-	const [token, setToken] = useContext(TokenContext);
 
 	const mutation = useMutation({
 		mutationFn: (newThought: ThoughtNoID) => {
-			form.reset();
-			let bearer = "";
-			if (token) {
-				bearer = "Bearer " + token;
-			}
 			return axios.post("/api/thoughts/create", newThought, {
 				withCredentials: true,
-				headers: {
-					Authorization: bearer,
-				},
 			});
 		},
 		onSuccess: (data: AxiosResponse<Thought>) => {
+			form.reset();
 			let old: Thought[] | undefined = queryClient.getQueryData(["thoughts"]);
 			if (!old) {
 				old = [];
@@ -64,6 +52,22 @@ export function ThoughtForm(props: ThoughtFormProps) {
 			queryClient.setQueryData(["thoughts"], [...old, data.data]);
 		},
 	});
+
+	let errorMsg;
+
+	if (mutation.isPending) {
+		errorMsg = (
+			<span className="text-xl font-bold text-neutral-500">Pending...</span>
+		);
+	}
+	if (mutation.isError) {
+		errorMsg = (
+			<span className="text-xl font-bold text-red-600">Unauthorized</span>
+		);
+	}
+	if (mutation.isSuccess) {
+		errorMsg = <></>;
+	}
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		mutation.mutate(values);
@@ -73,6 +77,7 @@ export function ThoughtForm(props: ThoughtFormProps) {
 		<Form {...form}>
 			<h2 className="-mb-0.5 text-2xl">Submit new Thought</h2>
 			<CentralHr className="mb-3 via-neutral-400" />
+			{errorMsg}
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
