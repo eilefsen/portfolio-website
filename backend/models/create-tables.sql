@@ -7,7 +7,7 @@ CREATE TABLE `thought`(
 
 CREATE TABLE `user` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `username` TEXT NOT NULL,
+    `username` TEXT NOT NULL UNIQUE,
     `password` TEXT NOT NULL,
     `superuser` BOOLEAN NOT NULL
 );
