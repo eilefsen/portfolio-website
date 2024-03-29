@@ -6,6 +6,7 @@ import (
 
 	"eilefsen.net/backend/models"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type CustomClaims struct {
@@ -20,7 +21,7 @@ type JWTSettings struct {
 
 var settings = JWTSettings{
 	SigningMethod: jwt.SigningMethodHS256,
-	Key:           []byte(os.Getenv("JWT_SECRET_KEY")),
+	Key:           []byte(uuid.New().String()),
 }
 
 func NewToken(u models.User) *jwt.Token {
