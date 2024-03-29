@@ -45,6 +45,7 @@ export function LoginForm(props: LoginFormProps) {
 			if (props.onSuccess) {
 				props.onSuccess();
 			}
+			console.info("Logged in!");
 			queryClient.setQueryData(["loginStatus"], true);
 		},
 	});

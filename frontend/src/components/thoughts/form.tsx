@@ -38,10 +38,11 @@ export function ThoughtForm() {
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
-		mutationFn: (newThought: ThoughtNoID) => {
-			return axios.post("/api/thoughts/create", newThought, {
+		mutationFn: async (newThought: ThoughtNoID) => {
+			const res = await axios.post("/api/thoughts/create", newThought, {
 				withCredentials: true,
 			});
+			return res;
 		},
 		onSuccess: (data: AxiosResponse<Thought>) => {
 			form.reset();

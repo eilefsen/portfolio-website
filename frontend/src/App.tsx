@@ -12,7 +12,11 @@ export default function App() {
 			const res = await axios.post(`/api/auth/status`, {
 				validateStatus: () => true,
 			});
-			return res.status == 200;
+			const ok = res.status == 200;
+			if (ok) {
+				console.info("Your access token is valid!");
+			}
+			return ok;
 		},
 		initialData: false,
 		retry: false,
@@ -24,9 +28,9 @@ export default function App() {
 				withCredentials: true,
 			});
 			const ok = res.status == 200;
-			console.log("refresh");
 			if (ok) {
 				queryClient.setQueryData(["loginStatus"], true);
+				console.info("Access token refreshed!");
 			}
 			return ok;
 		},
@@ -69,12 +73,11 @@ function Footer(props: FooterProps) {
 	async function logout() {
 		const res = await axios.post("/api/auth/logout");
 		if (res.status == 200) {
+			console.log("Logged out!");
 			queryClient.setQueryData(["loginStatus"], false);
 		}
 		return res;
 	}
-
-	console.log("isLoggedIn", props.isLoggedIn);
 
 	return (
 		<footer className="sticky bottom-0 pt-6">

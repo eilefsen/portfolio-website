@@ -13,7 +13,6 @@ function Index() {
 		queryKey: ["loginStatus"],
 		enabled: false,
 	});
-	console.log(result.data);
 	return (
 		<>
 			<StaticPage />
