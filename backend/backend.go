@@ -50,7 +50,7 @@ func main() {
 
 	// protected routes
 	rt.Group(func(rt chi.Router) {
-		rt.Post("/api/thoughts/create", TokenAuth(createThought))
+		rt.Post("/api/thoughts/create", SuperUserAuth(createThought))
 		rt.Post("/api/auth/status", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		})
