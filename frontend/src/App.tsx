@@ -1,21 +1,19 @@
 import { Link, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import "./App.css";
 import { CentralHr } from "./components/util";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-const queryClient = new QueryClient();
 function App() {
 	return (
-		<QueryClientProvider client={queryClient}>
+		<>
 			<header className="pb-4">
 				<h1 className="-mb-1 text-7xl">Eilefsen</h1>
 				<CentralHr />
 			</header>
-			<Outlet />
-			<TanStackRouterDevtools />
+			<main className="mx-auto min-h-[300px] px-4">
+				<Outlet />
+			</main>
 			<footer className="sticky bottom-0 pt-6">
-				<CentralHr />
+				<CentralHr />{" "}
 				<p className="flex justify-between bg-white px-6 pb-4 pt-2">
 					<span className="flex gap-2">
 						<span>
@@ -47,7 +45,7 @@ function App() {
 					<Link to="/login">Login</Link>
 				</p>
 			</footer>
-		</QueryClientProvider>
+		</>
 	);
 }
 
