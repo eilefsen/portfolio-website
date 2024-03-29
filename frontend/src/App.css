@@ -19,6 +19,7 @@ h2 {
 	font-weight: 700;
 }
 
-a {
+a,
+.link-button {
 	@apply italic underline decoration-1 underline-offset-2;
 }
