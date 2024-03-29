@@ -14,6 +14,7 @@
 		"@radix-ui/react-label": "^2.0.2",
 		"@radix-ui/react-slot": "^1.0.2",
 		"@tanstack/react-query": "^5.28.6",
+		"@tanstack/react-router": "^1.24.0",
 		"axios": "^1.6.8",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",
@@ -26,6 +27,8 @@
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
+		"@tanstack/router-devtools": "^1.24.0",
+		"@tanstack/router-vite-plugin": "^1.24.1",
 		"@types/node": "^20.11.5",
 		"@types/react": "^18.2.64",
 		"@types/react-dom": "^18.2.21",

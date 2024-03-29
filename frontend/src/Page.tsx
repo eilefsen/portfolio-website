@@ -1,9 +1,5 @@
-import { useLoaderData } from "react-router";
 import { Paragraph, Section } from "./components/section";
-import { Thought, ThoughtNoID } from "./router/loaders";
-import { ThoughtForm } from "./components/thoughtForm";
-import { SadGirlsRingBanner } from "./components/sadgirlsring";
-import { ThoughtElement, ThoughtsSection } from "./components/thoughts/section";
+import { ThoughtsSection } from "./components/thoughts/section";
 
 export default function Page() {
 	return (
