@@ -14,19 +14,13 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { Dispatch, SetStateAction, createContext, useContext } from "react";
-
-type TokenContextType = [string, Dispatch<SetStateAction<string>>];
-export const TokenContext = createContext<TokenContextType>(["", () => {}]);
 
 const formSchema = z.object({
 	username: z.string().min(2).max(250),
 	password: z.string().min(2).max(250),
 });
 
-interface LoginFormProps {}
-export function LoginForm(props: LoginFormProps) {
-	const [token, setToken] = useContext(TokenContext);
+export function LoginForm() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -37,11 +31,9 @@ export function LoginForm(props: LoginFormProps) {
 
 	const mutation = useMutation({
 		mutationKey: ["login"],
-		mutationFn: async (val: z.infer<typeof formSchema>) => {
+		mutationFn: (val: z.infer<typeof formSchema>) => {
 			form.reset();
-			const res = await axios.post("/api/auth/login", val);
-			setToken(res.data);
-			return res;
+			return axios.post("/api/auth/login", val);
 		},
 	});
 
