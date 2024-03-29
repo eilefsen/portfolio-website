@@ -1,34 +1,52 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import "./App.css";
 import { CentralHr } from "./components/util";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { createContext } from "react";
-
-export const loginStatusContext = createContext(false);
 
 export default function App() {
+	const queryClient = useQueryClient();
 	const result = useQuery({
 		queryKey: ["loginStatus"],
 		queryFn: async () => {
 			const res = await axios.post(`/api/auth/status`, {
 				validateStatus: () => true,
 			});
-			console.log(res);
 			return res.status == 200;
 		},
 		initialData: false,
+		retry: false,
+	});
+	useQuery({
+		queryKey: ["refresh"],
+		queryFn: async () => {
+			const res = await axios.post(`/api/auth/refresh`, {
+				withCredentials: true,
+			});
+			const ok = res.status == 200;
+			console.log("refresh");
+			if (ok) {
+				queryClient.setQueryData(["loginStatus"], true);
+			}
+			return ok;
+		},
+		refetchInterval: (query) => {
+			const status = query.state.status;
+			if (status == "error") {
+				return false;
+			}
+			return 240000;
+		},
+		retry: false,
 	});
 
 	return (
 		<>
-			<loginStatusContext.Provider value={result.data}>
-				<Header />
-				<main className="mx-auto px-4">
-					<Outlet />
-				</main>
-				<Footer />
-			</loginStatusContext.Provider>
+			<Header />
+			<main className="mx-auto px-4">
+				<Outlet />
+			</main>
+			<Footer isLoggedIn={result.data} />
 		</>
 	);
 }
@@ -42,7 +60,22 @@ function Header() {
 	);
 }
 
-function Footer() {
+interface FooterProps {
+	isLoggedIn: boolean;
+}
+
+function Footer(props: FooterProps) {
+	const queryClient = useQueryClient();
+	async function logout() {
+		const res = await axios.post("/api/auth/logout");
+		if (res.status == 200) {
+			queryClient.setQueryData(["loginStatus"], false);
+		}
+		return res;
+	}
+
+	console.log("isLoggedIn", props.isLoggedIn);
+
 	return (
 		<footer className="sticky bottom-0 pt-6">
 			<CentralHr />{" "}
@@ -74,7 +107,18 @@ function Footer() {
 						</a>
 					</span>
 				</span>
-				<Link to="/login">Login</Link>
+				{
+					// For some reason the ternary is in "opposite land", therefore we invert the boolean prop
+					!props.isLoggedIn ? (
+						<Link className="text-blue-600" to="/login">
+							Log in
+						</Link>
+					) : (
+						<button className="link-button text-blue-600" onClick={logout}>
+							Log out
+						</button>
+					)
+				}
 			</p>
 		</footer>
 	);

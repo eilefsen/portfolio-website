@@ -32,6 +32,11 @@ export function ThoughtsSection() {
 		thoughts = <span>Error: {result.error.message}</span>;
 	}
 	if (result.isSuccess) {
+		if (!result.data) {
+			thoughts = (
+				<h3 className="text-left text-xl">No thoughts available yet</h3>
+			);
+		}
 		thoughts = (
 			<>
 				{result.data
@@ -40,19 +45,14 @@ export function ThoughtsSection() {
 			</>
 		);
 	}
-	if (!result.data) {
-		thoughts = <h3 className="text-left text-xl">No thoughts available yet</h3>;
-	}
 
 	return (
-		<>
-			<Section
-				id="thoughts"
-				heading="Some of my Thoughts"
-				className="columns-2 sm:columns-3"
-			>
-				{thoughts}
-			</Section>
-		</>
+		<Section
+			id="thoughts"
+			heading="Some of my Thoughts"
+			className="columns-2 sm:columns-3"
+		>
+			{thoughts}
+		</Section>
 	);
 }

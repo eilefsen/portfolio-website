@@ -1,26 +1,24 @@
-import { loginStatusContext } from "@/App";
 import { Section, Paragraph } from "@/components/section";
 import { ThoughtForm } from "@/components/thoughts/form";
 import { ThoughtsSection } from "@/components/thoughts/section";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useContext } from "react";
 
 export const Route = createLazyFileRoute("/")({
 	component: Index,
 });
 
 function Index() {
-	let loginStatus = useQueryClient().getQueryData(["loginStatus"]);
-	// if (loginStatus == undefined) {
-	// 	loginStatus = false;
-	// }
-	console.log(loginStatus);
+	const result = useQuery({
+		queryKey: ["loginStatus"],
+		enabled: false,
+	});
+	console.log(result.data);
 	return (
 		<>
 			<StaticPage />
 			<ThoughtsSection />
-			<ThoughtForm />
+			{result.data && <ThoughtForm />}
 		</>
 	);
 }

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const formSchema = z.object({
@@ -33,6 +33,8 @@ export function LoginForm(props: LoginFormProps) {
 		},
 	});
 
+	const queryClient = useQueryClient();
+
 	const mutation = useMutation({
 		mutationKey: ["login"],
 		mutationFn: (val: z.infer<typeof formSchema>) => {
@@ -43,6 +45,7 @@ export function LoginForm(props: LoginFormProps) {
 			if (props.onSuccess) {
 				props.onSuccess();
 			}
+			queryClient.setQueryData(["loginStatus"], true);
 		},
 	});
 
