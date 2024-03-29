@@ -8,20 +8,11 @@ import (
 	"time"
 
 	"eilefsen.net/backend/models"
-	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type Claims struct {
-	Username string `json:"username"`
-	jwt.RegisteredClaims
-}
-
-var jwtKey = []byte(os.Getenv("JWT_SECRET_KEY"))
-
 func login(w http.ResponseWriter, r *http.Request) {
 	var creds models.Credentials
-	
 
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
@@ -59,20 +50,13 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
-	claims := Claims{
-		Username: u.Username,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expirationTime),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenExpire := time.Now().Add(5 * time.Minute)
+	tokenString, err := NewTokenString(u, tokenExpire)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		slog.Error("login:", "err", err)
 		return
 	}
-
 	w.WriteHeader(http.StatusOK)
 	responseJSON, err := json.Marshal(tokenString)
 	if err != nil {

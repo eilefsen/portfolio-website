@@ -56,30 +56,31 @@ func TokenAuth(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("Authorization")
 		if tokenString == "" || tokenString == "Bearer" {
-			cookie, err := r.Cookie("jwt")
+			cookie, err := r.Cookie("token")
 			tokenString = cookie.Value
 			if err != nil {
 				w.WriteHeader(http.StatusUnauthorized)
+				slog.Error("TokenAuth r.Cookie():", "err", err)
 				return
 			}
 		}
 		tokenString = strings.ReplaceAll(tokenString, "Bearer ", "")
-		slog.Debug("TokenAuth:", "tokenString", tokenString)
 
-		claims := &Claims{}
+		claims := &CustomClaims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (any, error) {
-			return jwtKey, nil
+			return settings.Key, nil
 		})
 		if err != nil {
 			if err == jwt.ErrTokenInvalidClaims {
 				w.WriteHeader(http.StatusUnauthorized)
+				slog.Error("TokenAuth:", "err", err)
 				return
 			}
 			if err == jwt.ErrSignatureInvalid {
 				w.WriteHeader(http.StatusUnauthorized)
+				slog.Error("TokenAuth:", "err", err)
 				return
 			}
-			slog.Error(err.Error())
 			slog.Error("TokenAuth:", "err", err)
 			w.WriteHeader(http.StatusBadRequest)
 			return
