@@ -51,33 +51,19 @@ func GetUser(id uint32) (User, error) {
 	return u, err
 }
 
-func GetUsersByName(name string) ([]User, error) {
-	var users []User
-	rows, err := db.Query("select * from user where user.username = ?", name)
+func GetUserByName(name string) (User, error) {
+	var u User
+	row := db.QueryRow("select * from user where user.username = ?", name)
+	err := row.Scan(
+		&u.ID,
+		&u.Username,
+		&u.Password,
+		&u.SuperUser,
+	)
 	if err != nil {
-		return nil, err
+		return User{}, err
 	}
-	defer rows.Close()
-	for rows.Next() {
-		var u User
-		err := rows.Scan(
-			&u.ID,
-			&u.Username,
-			&u.Password,
-			&u.SuperUser,
-		)
-		if err != nil {
-			return nil, err
-		}
-		users = append(users, u)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	if len(users) == 0 {
-		return nil, ErrResourceNotFound
-	}
-	return users, err
+	return u, err
 }
 
 func AllThoughts() ([]Thought, error) {

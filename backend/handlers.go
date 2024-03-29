@@ -21,26 +21,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	users, err := models.GetUsersByName(creds.Username)
-	if err == models.ErrResourceNotFound {
-		slog.Error("login: No users found", "error", err)
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
+	u, err := models.GetUserByName(creds.Username)
 	if err != nil {
 		slog.Error("login: Could not get user", "username", creds.Username)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
-	}
-
-	u := users[0]
-	if len(users) > 1 {
-		slog.Info("Multiple users with the same name, defaulting to the lowest ID", "name", creds.Username)
-		for _, user := range users {
-			if user.ID < u.ID {
-				u = user
-			}
-		}
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(creds.Password))
@@ -54,7 +39,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	tokenString, err := NewTokenString(u, tokenExpire)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		slog.Error("login:", "err", err)
+		slog.Error("login: NewTokenString:", "err", err)
 		return
 	}
 	cookie := http.Cookie{
