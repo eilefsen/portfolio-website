@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { CentralHr } from "../util";
 
 const formSchema = z.object({
 	username: z.string().min(2).max(250),
@@ -66,7 +67,8 @@ export function LoginForm(props: LoginFormProps) {
 
 	return (
 		<Form {...form}>
-			<h2>Log in</h2>
+			<h2 className="text-3xl">Log in</h2>
+			<CentralHr className="mx-auto w-full max-w-[30rem] via-neutral-300" />
 			{errorMsg}
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
