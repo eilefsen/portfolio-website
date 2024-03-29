@@ -54,6 +54,28 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &cookie)
+func logoutHandler(w http.ResponseWriter, _ *http.Request) {
+	c := &http.Cookie{
+		Name:     "access_token",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Domain:   os.Getenv("DOMAIN"),
+	}
+	http.SetCookie(w, c)
+
+	c = &http.Cookie{
+		Name:     "refresh_token",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Domain:   os.Getenv("DOMAIN"),
+	}
+	http.SetCookie(w, c)
 }
 
 func authStatusHandler(w http.ResponseWriter, r *http.Request) {

@@ -57,6 +57,7 @@ func main() {
 	rt.Group(func(rt chi.Router) {
 		rt.Get("/api/thoughts", fetchAllThoughts)
 		rt.Post("/api/auth/login", login)
+		rt.Post("/api/auth/logout", logoutHandler)
 	})
 	http.ListenAndServe(os.Getenv("DOMAIN")+":"+os.Getenv("BACKEND_PORT"), rt)
 }
