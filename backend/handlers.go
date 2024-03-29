@@ -28,7 +28,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
-		slog.Error("Could not get user", "username", creds.Username)
+		slog.Error("login: Could not get user", "username", creds.Username)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
