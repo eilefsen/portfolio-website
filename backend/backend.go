@@ -49,16 +49,16 @@ func main() {
 	))
 
 	// protected routes
-	rt.Group(func(r chi.Router) {
+	rt.Group(func(rt chi.Router) {
 		rt.Post("/api/thoughts/create", TokenAuth(createThought))
 		rt.Post("/api/auth/status", func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 		})
 	})
 	// unprotected routes
-	rt.Group(func(r chi.Router) {
+	rt.Group(func(rt chi.Router) {
 		rt.Get("/api/thoughts", fetchAllThoughts)
 		rt.Post("/api/auth/login", login)
 	})
-	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
+	http.ListenAndServe(os.Getenv("DOMAIN")+":"+os.Getenv("BACKEND_PORT"), rt)
 }
