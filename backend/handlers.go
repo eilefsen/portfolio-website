@@ -76,6 +76,75 @@ func login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &rtCookie)
 }
 
+func authRefreshHandler(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("refresh_token")
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	rtString := cookie.Value
+	rt, err := jwt.Parse(rtString, func(token *jwt.Token) (any, error) {
+		return settings.Key, nil
+	})
+	if err != nil {
+		if err == jwt.ErrTokenInvalidClaims {
+			w.WriteHeader(http.StatusUnauthorized)
+			slog.Error("TokenAuth:", "err", err)
+			return
+		}
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
+			slog.Error("TokenAuth:", "err", err)
+			return
+		}
+		slog.Error("TokenAuth:", "err", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if !rt.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	var subject string
+	subject, err = rt.Claims.GetSubject()
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	var userID uint32
+	userID, err = ParseUint32(subject)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	u, err := models.GetUser(userID)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	atExpire := time.Now().Add(5 * time.Minute)
+	atString, err := NewAccessTokenString(u, atExpire)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		slog.Error("refresh: NewAccessTokenString:", "err", err)
+		return
+	}
+	atCookie := http.Cookie{
+		Name:     "access_token",
+		Value:    atString,
+		HttpOnly: true,
+		Path:     "/",
+		Expires:  atExpire,
+		// Secure:   true, // enable for production
+		SameSite: http.SameSiteLaxMode,
+		Domain:   os.Getenv("DOMAIN"),
+	}
+
+	http.SetCookie(w, &atCookie)
+}
+
 func logoutHandler(w http.ResponseWriter, _ *http.Request) {
 	c := &http.Cookie{
 		Name:     "access_token",

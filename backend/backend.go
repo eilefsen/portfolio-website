@@ -52,6 +52,7 @@ func main() {
 	rt.Group(func(rt chi.Router) {
 		rt.Post("/api/thoughts/create", SuperUserAuth(createThought))
 		rt.Post("/api/auth/status", TokenAuth(authStatusHandler))
+		rt.Post("/api/auth/refresh", authRefreshHandler)
 	})
 	// unprotected routes
 	rt.Group(func(rt chi.Router) {
