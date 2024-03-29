@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router-dom";
 
 import router from "./router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LoginForm } from "./components/login";
+import { LoginForm } from "@/components/login/form";
 
 const queryClient = new QueryClient();
 
