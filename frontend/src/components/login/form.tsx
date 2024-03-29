@@ -20,7 +20,11 @@ const formSchema = z.object({
 	password: z.string().min(2).max(250),
 });
 
-export function LoginForm() {
+interface LoginFormProps {
+	onSuccess?: () => void;
+}
+
+export function LoginForm(props: LoginFormProps) {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -36,6 +40,9 @@ export function LoginForm() {
 		},
 		onSuccess: () => {
 			form.reset();
+			if (props.onSuccess) {
+				props.onSuccess();
+			}
 		},
 	});
 
@@ -51,9 +58,6 @@ export function LoginForm() {
 				Wrong username or password
 			</span>
 		);
-	}
-	if (mutation.isSuccess) {
-		errorMsg = <></>;
 	}
 
 	return (
