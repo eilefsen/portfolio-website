@@ -33,13 +33,13 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	u := users[0]
 	if len(users) > 1 {
 		slog.Info("Multiple users with the same name, defaulting to the lowest ID", "name", creds.Username)
-	}
-	u := users[0]
-	for _, user := range users {
-		if user.ID < u.ID {
-			u = user
+		for _, user := range users {
+			if user.ID < u.ID {
+				u = user
+			}
 		}
 	}
 
