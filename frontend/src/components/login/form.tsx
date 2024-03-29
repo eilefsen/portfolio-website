@@ -32,8 +32,10 @@ export function LoginForm() {
 	const mutation = useMutation({
 		mutationKey: ["login"],
 		mutationFn: (val: z.infer<typeof formSchema>) => {
-			form.reset();
 			return axios.post("/api/auth/login", val);
+		},
+		onSuccess: () => {
+			form.reset();
 		},
 	});
 
@@ -41,9 +43,23 @@ export function LoginForm() {
 		mutation.mutate(values);
 	}
 
+	let errorMsg;
+
+	if (mutation.isError) {
+		errorMsg = (
+			<span className="text-xl font-bold text-red-600">
+				Wrong username or password
+			</span>
+		);
+	}
+	if (mutation.isSuccess) {
+		errorMsg = <></>;
+	}
+
 	return (
 		<Form {...form}>
 			<h2>Log in</h2>
+			{errorMsg}
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
