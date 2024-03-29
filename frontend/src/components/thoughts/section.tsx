@@ -36,14 +36,15 @@ export function ThoughtsSection() {
 			thoughts = (
 				<h3 className="text-left text-xl">No thoughts available yet</h3>
 			);
+		} else {
+			thoughts = (
+				<>
+					{result.data
+						?.map((t: Thought) => <ThoughtElement {...t} key={t.id} />)
+						.reverse()}
+				</>
+			);
 		}
-		thoughts = (
-			<>
-				{result.data
-					?.map((t: Thought) => <ThoughtElement {...t} key={t.id} />)
-					.reverse()}
-			</>
-		);
 	}
 
 	return (
