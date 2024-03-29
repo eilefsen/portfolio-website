@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"eilefsen.net/backend/models"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -35,25 +36,46 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenExpire := time.Now().Add(5 * time.Minute)
-	tokenString, err := NewTokenString(u, tokenExpire)
+	atExpire := time.Now().Add(5 * time.Minute)
+	rtExpire := time.Now().Add(24 * time.Hour)
+	atString, err := NewAccessTokenString(u, atExpire)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		slog.Error("login: NewTokenString:", "err", err)
+		slog.Error("login: NewAccessTokenString:", "err", err)
 		return
 	}
-	cookie := http.Cookie{
-		Name:     "token",
-		Value:    tokenString,
+	rtString, err := NewRefreshTokenString(u, rtExpire)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		slog.Error("login: NewRefreshTokenString:", "err", err)
+		return
+	}
+	atCookie := http.Cookie{
+		Name:     "access_token",
+		Value:    atString,
 		HttpOnly: true,
 		Path:     "/",
-		Expires:  tokenExpire,
+		Expires:  atExpire,
 		// Secure:   true, // enable for production
 		SameSite: http.SameSiteLaxMode,
 		Domain:   os.Getenv("DOMAIN"),
 	}
 
-	http.SetCookie(w, &cookie)
+	http.SetCookie(w, &atCookie)
+	rtCookie := http.Cookie{
+		Name:     "refresh_token",
+		Value:    rtString,
+		HttpOnly: true,
+		Path:     "/",
+		Expires:  rtExpire,
+		// Secure:   true, // enable for production
+		SameSite: http.SameSiteLaxMode,
+		Domain:   os.Getenv("DOMAIN"),
+	}
+
+	http.SetCookie(w, &rtCookie)
+}
+
 func logoutHandler(w http.ResponseWriter, _ *http.Request) {
 	c := &http.Cookie{
 		Name:     "access_token",
