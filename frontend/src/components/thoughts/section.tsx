@@ -1,7 +1,8 @@
-import { ThoughtNoID, fetchAllThoughts } from "@/router/loaders";
 import { Paragraph, Section } from "@/components/section";
 import { ThoughtForm } from "./form";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Thought, ThoughtNoID } from "./types";
 
 export function ThoughtElement(props: ThoughtNoID) {
 	return (
@@ -17,7 +18,10 @@ export function ThoughtElement(props: ThoughtNoID) {
 export function ThoughtsSection() {
 	const result = useQuery({
 		queryKey: ["thoughts"],
-		queryFn: fetchAllThoughts,
+		queryFn: async () => {
+			const res = await axios.get(`/api/thoughts`);
+			return res.data;
+		},
 	});
 
 	let thoughts;
@@ -32,7 +36,7 @@ export function ThoughtsSection() {
 		thoughts = (
 			<>
 				{result.data
-					?.map((t) => <ThoughtElement {...t} key={t.id} />)
+					?.map((t: Thought) => <ThoughtElement {...t} key={t.id} />)
 					.reverse()}
 			</>
 		);

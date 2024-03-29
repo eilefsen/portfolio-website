@@ -4,7 +4,6 @@ import { RouterProvider } from "react-router-dom";
 
 import router from "./router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LoginForm } from "@/components/login/form";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +15,6 @@ function App() {
 				<CentralHr />
 			</header>
 			<RouterProvider router={router} />
-			<LoginForm />
 			<footer className="sticky bottom-0 pt-6">
 				<CentralHr />
 				<p className="flex justify-between bg-white px-6 pb-4 pt-2">

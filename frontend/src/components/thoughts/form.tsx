@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
-import { Thought, ThoughtNoID } from "@/router/loaders";
+import { ThoughtNoID, Thought } from "./types";
 
 const formSchema = z.object({
 	heading: z.string().min(2).max(50),
