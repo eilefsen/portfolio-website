@@ -108,7 +108,7 @@ function Footer(props: FooterProps) {
 					</span>
 				</span>
 				{
-					// For some reason the ternary is in "opposite land", therefore we invert the boolean prop
+					// inverted boolean because we want to show the login link when not logged in
 					!props.isLoggedIn ? (
 						<Link className="text-blue-600" to="/login">
 							Log in
