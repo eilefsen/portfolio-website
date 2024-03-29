@@ -77,7 +77,7 @@ export function ThoughtForm() {
 	return (
 		<Form {...form}>
 			<h2 className="-mb-0.5 text-2xl">Submit new Thought</h2>
-			<CentralHr className="mb-3 via-neutral-400" />
+			<CentralHr className="mx-auto mb-3 max-w-[40rem] via-neutral-400" />
 			{errorMsg}
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}

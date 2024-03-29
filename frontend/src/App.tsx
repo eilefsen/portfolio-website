@@ -87,7 +87,7 @@ function Footer(props: FooterProps) {
 		<footer className="sticky bottom-0 pt-6">
 			<CentralHr />{" "}
 			<p className="flex justify-between bg-white px-6 pb-4 pt-2">
-				<span className="flex gap-2">
+				<span className="flex flex-col whitespace-nowrap text-justify sm:flex-row sm:gap-x-2">
 					<span>
 						Email:{" "}
 						<a

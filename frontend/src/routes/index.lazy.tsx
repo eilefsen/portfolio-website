@@ -60,20 +60,19 @@ function StaticPage() {
 						},
 					]}
 				>
-					This is a fairly basic HTTP client for the ESP32. The microcontroller
-					drives a sh1106 OLED display.
+					This is a fairly basic HTTP client for the ESP32.
 					<img
 						className="float-start me-3 mt-1 h-40 rounded-sm shadow-md shadow-neutral-400"
 						src="/esp_http_client.gif"
 						alt="A picture of Dotify on mobile"
 					/>{" "}
-					The purpose is to monitor local bus departures so i can check it
-					before leaving the house, potentially saving me a few minutes out in
-					the cold. The API i'm targeting is specific to Norway, although it is
-					based on a larger project likely used elsewhere. The crates for esp
-					are not super well documented (imo), so this took a bit of guesswork
-					to implement. PS: yes, the display is in fact just taped to the board
-					(lol).
+					The microcontroller drives a sh1106 OLED display. The purpose is to
+					monitor local bus departures so i can check it before leaving the
+					house, potentially saving me a few minutes out in the cold. The API
+					i'm targeting is specific to Norway, although it is based on a larger
+					project likely used elsewhere. The crates for esp are not super well
+					documented (imo), so this took a bit of guesswork to implement. PS:
+					yes, the display is in fact just taped to the board (lol).
 				</Paragraph>
 				<Paragraph
 					heading="Dotify"

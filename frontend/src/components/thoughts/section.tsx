@@ -26,15 +26,15 @@ export function ThoughtsSection() {
 	let thoughts;
 
 	if (result.isPending) {
-		thoughts = <span>Loading...</span>;
+		thoughts = <span className="text-left">Loading...</span>;
 	}
 	if (result.isError) {
-		thoughts = <span>Error: {result.error.message}</span>;
+		thoughts = <span className="text-left">Error: {result.error.message}</span>;
 	}
 	if (result.isSuccess) {
 		if (!result.data) {
 			thoughts = (
-				<h3 className="text-left text-xl">No thoughts available yet</h3>
+				<span className="text-left text-xl">No thoughts available yet</span>
 			);
 		} else {
 			thoughts = (
