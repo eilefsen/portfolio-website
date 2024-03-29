@@ -50,6 +50,7 @@ export function ThoughtForm(props: ThoughtFormProps) {
 				bearer = "Bearer " + token;
 			}
 			return axios.post("/api/thoughts/create", newThought, {
+				withCredentials: true,
 				headers: {
 					Authorization: bearer,
 				},
