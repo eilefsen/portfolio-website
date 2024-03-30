@@ -60,5 +60,5 @@ func main() {
 		rt.Post("/api/auth/login", login)
 		rt.Post("/api/auth/logout", logoutHandler)
 	})
-	http.ListenAndServe(os.Getenv("DOMAIN")+":"+os.Getenv("BACKEND_PORT"), rt)
+	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
 }
