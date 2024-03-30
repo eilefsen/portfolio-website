@@ -28,4 +28,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: vite-artifact
-          path: /frontend/dist
+          path: |
+            frontend/dist/
