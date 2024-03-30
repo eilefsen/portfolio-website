@@ -43,7 +43,7 @@ function StaticPage() {
 					I make things! Particularly software applications. I have also been
 					known to make music out of my bedroom! I mostly make electronic music
 					like breakcore, house, techno. But I have also done some alternative
-					rock previously.
+					rock previously. TEST
 				</Paragraph>
 			</Section>
 			<Section
