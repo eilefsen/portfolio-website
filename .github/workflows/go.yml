@@ -21,8 +21,6 @@ jobs:
     - name: Build
       working-directory: ./backend
       run: go build -v -o ../build/backend
-    - name: Give binary executable permissions
-      run: chmod a+x ./build/backend
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v4
       with:
