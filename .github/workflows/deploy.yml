@@ -19,8 +19,8 @@ jobs:
       with:
         name: go-artifact
         path: ./build/
-    - name: ls
-      run: ls -lah
+    - name: Give binary executable permissions
+      run: chmod a+x ./build/backend
     - name: rsync deployments
       uses: burnett01/rsync-deployments@7.0.0
       with:
