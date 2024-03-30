@@ -19,6 +19,11 @@ jobs:
       with:
         name: go-artifact
         path: ./build/
+    - name: Download Vite Build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: vite-artifact
+        path: ./build/
     - name: Give binary executable permissions
       run: chmod a+x ./build/backend
     - name: rsync deployments
