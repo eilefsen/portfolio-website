@@ -28,7 +28,7 @@ function StaticPage() {
 			<Section id="about" className="sm:columns-2">
 				<Paragraph heading="Who am i?">
 					<img
-						className="float-start me-16 mt-2 w-32 rounded-full shadow-md shadow-neutral-400 [shape-outside:circle(30%)]"
+						className="float-start me-6 mt-2 w-32 rounded-full shadow-md shadow-neutral-400 [shape-outside:circle()]"
 						src="/profile_pic.jpg"
 						alt="A picture of me!"
 					/>
