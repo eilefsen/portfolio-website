@@ -41,4 +41,5 @@ jobs:
         host: eilefsen.no
         username: fedora
         key: $ {{ secrets.DEPLOY_KEY }}
+        port: 22
         script: systemctl --user restart portfolio-backend.service
