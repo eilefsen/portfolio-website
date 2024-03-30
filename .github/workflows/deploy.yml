@@ -34,4 +34,11 @@ jobs:
         remote_path: /srv/www/portfolio/
         remote_host: eilefsen.no
         remote_user: fedora
-        remote_key: ${{ secrets.DEPLOY_KEY }}    
+        remote_key: ${{ secrets.DEPLOY_KEY }}  
+    - name: Restart Go server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: eilefsen.no
+        username: fedora
+        key: $ {{ secrets.DEPLOY_KEY }}
+        script: systemctl --user restart portfolio-backend.service
