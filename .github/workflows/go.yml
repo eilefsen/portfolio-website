@@ -23,3 +23,8 @@ jobs:
 
     - name: Build
       run: go build -v -o ../build/backend
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v4
+      with:
+        name: go-artifact
+        path: ../build/*
