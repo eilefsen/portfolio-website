@@ -17,6 +17,7 @@ jobs:
     - name: rsync deployments
       uses: burnett01/rsync-deployments@7.0.0
       with:
+        path: ./build/
         switches: -avzr --delete
         remote_path: /srv/www/portfolio/
         remote_host: eilefsen.no
