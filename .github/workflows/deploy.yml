@@ -11,6 +11,7 @@ jobs:
   vite-build:
     uses: ./.github/workflows/vite.yml
   deploy:
+    needs: [go-build, vite-build]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
