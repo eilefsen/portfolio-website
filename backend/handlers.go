@@ -56,7 +56,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		Path:     "/",
 		Expires:  atExpire,
-		// Secure:   true, // enable for production
+		Secure:   true, // enable for production
 		SameSite: http.SameSiteLaxMode,
 		Domain:   os.Getenv("DOMAIN"),
 	}
@@ -68,7 +68,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		Path:     "/",
 		Expires:  rtExpire,
-		// Secure:   true, // enable for production
+		Secure:   true, // enable for production
 		SameSite: http.SameSiteLaxMode,
 		Domain:   os.Getenv("DOMAIN"),
 	}
