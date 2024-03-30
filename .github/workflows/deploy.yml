@@ -18,7 +18,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: go-artifact
-        path: ./build/
+        path: ./build/bin/
     - name: Download Vite Build artifact
       uses: actions/download-artifact@v4
       with:
