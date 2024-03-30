@@ -21,6 +21,7 @@ export function ThoughtsSection() {
 			const res = await axios.get(`/api/thoughts`);
 			return res.data;
 		},
+		initialData: [],
 	});
 
 	let thoughts;
