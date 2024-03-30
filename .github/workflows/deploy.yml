@@ -25,7 +25,7 @@ jobs:
       uses: burnett01/rsync-deployments@7.0.0
       with:
         path: ./build/
-        switches: -avzr --group=www-data --delete
+        switches: -avzr --chown=fedora:nginx --delete
         remote_path: /srv/www/portfolio/
         remote_host: eilefsen.no
         remote_user: fedora
