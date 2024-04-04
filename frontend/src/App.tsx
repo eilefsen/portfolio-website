@@ -3,6 +3,7 @@ import "./App.css";
 import { CentralHr } from "./components/util";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { SadGirlsRingBanner } from "./components/sadgirlsring";
 
 export default function App() {
 	const queryClient = useQueryClient();
@@ -49,6 +50,7 @@ export default function App() {
 			<Header />
 			<main className="mx-auto px-4">
 				<Outlet />
+				<SadGirlsRingBanner />
 			</main>
 			<Footer isLoggedIn={result.data} />
 		</>
