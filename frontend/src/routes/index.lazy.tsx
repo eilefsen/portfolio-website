@@ -1,6 +1,8 @@
+import { SadGirlsRingBanner } from "@/components/sadgirlsring";
 import { Section, Paragraph } from "@/components/section";
 import { ThoughtForm } from "@/components/thoughts/form";
 import { ThoughtsSection } from "@/components/thoughts/section";
+import { CentralHr, LeftHr } from "@/components/util";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
@@ -18,6 +20,9 @@ function Index() {
 			<StaticPage />
 			<ThoughtsSection />
 			{result.data && <ThoughtForm />}
+			<CentralHr className="my-2" />
+			<SadGirlsRingBanner />
+			<h3 className="-mt-1.5 text-xl font-bold">Web ring!</h3>
 		</>
 	);
 }

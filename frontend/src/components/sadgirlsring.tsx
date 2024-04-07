@@ -14,7 +14,7 @@ export function SadGirlsRingBanner() {
 	const result = useQuery({
 		queryKey: ["webring"],
 		queryFn: async (): Promise<SadGirlsRingBanner[]> => {
-			const res = await axios.get(`/sadgirlsring.json`);
+			const res = await axios.get(`https://sadgirlsclub.wtf/sadgirlsring.json`);
 			return res.data;
 		},
 	});
@@ -39,14 +39,18 @@ export function SadGirlsRingBanner() {
 
 	let q;
 	if (bannerResult.isSuccess) {
-		q = <Quote {...bannerResult.data} />;
+		q = <BannerImage {...bannerResult.data} />;
 	}
-	return q;
+	return (
+		<div className="inline-block">
+			<div className="border border-black p-px">{q}</div>
+		</div>
+	);
 }
 
-function Quote(props: SadGirlsRingBanner) {
+function BannerImage(props: SadGirlsRingBanner) {
 	return (
-		<a className="h-[60px] w-[240px]" href={props.url} target="_blank">
+		<a className="block" href={props.url} target="_blank">
 			<img src={props.imgSrc} alt={props.alt} />
 		</a>
 	);

@@ -24,37 +24,24 @@ export function ThoughtsSection() {
 		initialData: [],
 	});
 
-	let thoughts;
-
-	if (result.isPending) {
-		thoughts = <span className="text-left">Loading...</span>;
+	if (result.isFetching) {
+		return null;
 	}
-	if (result.isError) {
-		thoughts = <span className="text-left">Error: {result.error.message}</span>;
+	if (!result.isSuccess) {
+		return null;
 	}
-	if (result.isSuccess) {
-		if (!result.data) {
-			thoughts = (
-				<span className="text-left text-xl">No thoughts available yet</span>
-			);
-		} else {
-			thoughts = (
-				<>
-					{result.data
-						?.map((t: Thought) => <ThoughtElement {...t} key={t.id} />)
-						.reverse()}
-				</>
-			);
-		}
+	if (!result.data) {
+		return null;
 	}
-
 	return (
 		<Section
 			id="thoughts"
 			heading="Some of my Thoughts"
 			className="columns-2 sm:columns-3"
 		>
-			{thoughts}
+			{result.data
+				?.map((t: Thought) => <ThoughtElement {...t} key={t.id} />)
+				.reverse()}
 		</Section>
 	);
 }
