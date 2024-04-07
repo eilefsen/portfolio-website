@@ -20,7 +20,7 @@ function Index() {
 			<StaticPage />
 			<ThoughtsSection />
 			{result.data && <ThoughtForm />}
-			<CentralHr className="my-2" />
+			<CentralHr className="my-4 via-neutral-400" />
 			<SadGirlsRingBanner />
 			<h3 className="-mt-1.5 text-xl font-bold">Web ring!</h3>
 		</>
