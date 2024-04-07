@@ -50,7 +50,6 @@ export default function App() {
 			<Header />
 			<main className="mx-auto px-4">
 				<Outlet />
-				<SadGirlsRingBanner />
 			</main>
 			<Footer isLoggedIn={result.data} />
 		</>
