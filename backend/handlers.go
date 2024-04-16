@@ -261,14 +261,16 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	err = os.MkdirAll("./uploads", os.ModePerm)
+	err = os.MkdirAll("../frontend/public/uploads", os.ModePerm)
 	if err != nil {
 		slog.Debug("uploadPicture: Failed to make directory")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	dst, err := os.Create(fmt.Sprintf("./uploads/%d%s", time.Now().Unix(), filepath.Ext(fileHeader.Filename)))
+	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(fileHeader.Filename))
+
+	dst, err := os.Create("../frontend/public/uploads/" + filename)
 	if err != nil {
 		slog.Debug("uploadPicture: Failed to create file")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -295,7 +297,7 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	var pic models.PictureNoID
 	pic.PictureUpload = p
 
-	pic.ImgSrc = dst.Name()
+	pic.ImgSrc = "/uploads/" + filename
 
 	insertedPicture, err := models.NewPicture(pic)
 	if err != nil {
