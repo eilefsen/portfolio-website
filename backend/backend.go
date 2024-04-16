@@ -58,6 +58,7 @@ func main() {
 	// unprotected routes
 	rt.Group(func(rt chi.Router) {
 		rt.Get("/api/thoughts", fetchAllThoughts)
+		rt.Get("/api/img/all", fetchAllPictures)
 		rt.Post("/api/auth/login", login)
 		rt.Post("/api/auth/logout", logoutHandler)
 	})
