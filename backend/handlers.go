@@ -246,7 +246,7 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	var p models.PictureUpload
 
 	const MAX_UPLOAD_SIZE = (1024 * 8) * 1024 // 8MB
-	const UPLOADS_DIR = "../dist/uploads"
+	const UPLOADS_DIR = "./dist/uploads"
 
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
