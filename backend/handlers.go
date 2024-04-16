@@ -246,6 +246,8 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	var p models.PictureUpload
 
 	const MAX_UPLOAD_SIZE = (1024 * 8) * 1024 // 8MB
+	const UPLOADS_DIR = "../dist/uploads"
+
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
 		slog.Debug("uploadPicture", "err", err)
@@ -261,7 +263,7 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	err = os.MkdirAll("../frontend/public/uploads", os.ModePerm)
+	err = os.MkdirAll(UPLOADS_DIR, os.ModePerm)
 	if err != nil {
 		slog.Debug("uploadPicture: Failed to make directory")
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -270,7 +272,7 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 
 	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(fileHeader.Filename))
 
-	dst, err := os.Create("../frontend/public/uploads/" + filename)
+	dst, err := os.Create(UPLOADS_DIR + filename)
 	if err != nil {
 		slog.Debug("uploadPicture: Failed to create file")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
