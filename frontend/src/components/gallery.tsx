@@ -5,17 +5,28 @@ import {
 	CardHeader,
 	CardTitle,
 } from "./ui/card";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "./ui/carousel";
 
 interface GalleryProps {}
 export function Gallery(props: GalleryProps) {
 	return (
-		<div className="">
-			<GalleryCard
-				title="En katt i natten"
-				locationName="Grunerløkka"
-				imgSrc="/img/katt_i_natten.jpg"
-			/>
-		</div>
+		<Carousel>
+			<CarouselContent>
+				<GalleryCarouselItem
+					title="En katt i natten"
+					locationName="Oslo, Grünerløkka"
+					imgSrc="/img/katt_i_natten.jpg"
+				/>
+			</CarouselContent>
+			<CarouselPrevious />
+			<CarouselNext />
+		</Carousel>
 	);
 }
 
@@ -24,16 +35,18 @@ interface GalleryCardProps {
 	locationName?: string;
 	imgSrc: string;
 }
-function GalleryCard(props: GalleryCardProps) {
+function GalleryCarouselItem(props: GalleryCardProps) {
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>{props.title}</CardTitle>
-				<CardDescription>{props.locationName}</CardDescription>
-			</CardHeader>
-			<CardContent>
+		<CarouselItem>
+			<div>
+				<h3 className="smallcaps text-3xl font-bold leading-none">
+					«{props.title}»
+				</h3>
+				<h4 className="pb-2 text-lg font-light leading-none">
+					{props.locationName}
+				</h4>
 				<img src={props.imgSrc} alt={props.title} />
-			</CardContent>
-		</Card>
+			</div>
+		</CarouselItem>
 	);
 }
