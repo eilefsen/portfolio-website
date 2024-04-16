@@ -14,7 +14,7 @@ CREATE TABLE `user` (
 
 CREATE TABLE `picture` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`imgSrc` TEXT NOT NULL,
     `title` TEXT NOT NULL,
-    `locationName` TEXT
+	`locationName` TEXT,
+	`imgSrc` TEXT NOT NULL
 );
