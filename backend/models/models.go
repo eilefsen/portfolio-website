@@ -36,6 +36,81 @@ type User struct {
 	ID        uint32 `json:"id"`
 }
 
+type PictureNoID struct {
+	Title        string `json:"title"`
+	LocationName string `json:"locationName"`
+	ImgSrc       string `json:"imgSrc"`
+}
+type Picture struct {
+	PictureNoID
+	ID uint32 `json:"id"`
+}
+
+func GetPicture(id uint32) (Picture, error) {
+	var p Picture
+	row := db.QueryRow("select * from picture where picture.id = ?", id)
+	err := row.Scan(
+		&p.ID,
+		&p.Title,
+		&p.LocationName,
+		&p.ImgSrc,
+	)
+	if err != nil {
+		return Picture{}, err
+	}
+	return p, err
+}
+
+func AllPictures() ([]Picture, error) {
+	var pictures []Picture
+	rows, err := db.Query("select * from picture")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var p Picture
+		err := rows.Scan(
+			&p.ID,
+			&p.Title,
+			&p.LocationName,
+			&p.ImgSrc,
+		)
+		if err != nil {
+			return nil, err
+		}
+		pictures = append(pictures, p)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	if len(pictures) == 0 {
+		return nil, ErrResourceNotFound
+	}
+	return pictures, err
+}
+
+func NewPicture(pic PictureNoID) (Picture, error) {
+	var p Picture
+	res, err := db.Exec(
+		`INSERT INTO picture (title, locationName, imgSrc) VALUES ( ?, ?, ?)`,
+		pic.Title,
+		pic.LocationName,
+		pic.ImgSrc,
+	)
+	if err != nil {
+		return p, err
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return p, err
+	}
+	p.ID = uint32(id)
+	p.PictureNoID = pic
+	slog.Info("models.NewPicture", "p", p)
+	return p, nil
+}
+
 func GetUser(id uint32) (User, error) {
 	var u User
 	row := db.QueryRow("select * from user where user.id = ?", id)
