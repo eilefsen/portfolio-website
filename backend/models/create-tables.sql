@@ -11,3 +11,10 @@ CREATE TABLE `user` (
     `password` TEXT NOT NULL,
     `superuser` BOOLEAN NOT NULL
 );
+
+CREATE TABLE `picture` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`imgSrc` TEXT NOT NULL,
+    `title` TEXT NOT NULL,
+    `locationName` TEXT
+);
