@@ -19,22 +19,49 @@ import {
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { CentralHr } from "./util";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 import { Section } from "./section";
 import { InputFile } from "./ui/inputfile";
 
 export function Gallery() {
+	const result = useQuery({
+		queryKey: ["pictures"],
+		queryFn: async (): Promise<GalleryPicture[]> => {
+			const res = await axios.get(`/api/img/all`);
+			return res.data;
+		},
+		initialData: [],
+	});
+
+	if (result.isFetching) {
+		return null;
+	}
+	if (!result.isSuccess) {
+		return null;
+	}
+	if (!result.data) {
+		return null;
+	}
+
+	const items: JSX.Element[] = [];
+
+	for (const pic of result.data) {
+		const item = (
+			<GalleryCarouselItem
+				title={pic.title}
+				locationName={pic.locationName}
+				imgSrc={pic.imgSrc}
+				key={pic.id}
+			/>
+		);
+		items.push(item);
+	}
+
 	return (
 		<Section id="gallery" heading="Gallery">
 			<Carousel>
-				<CarouselContent>
-					<GalleryCarouselItem
-						title="En katt i natten"
-						locationName="Oslo, Grünerløkka"
-						imgSrc="/img/katt_i_natten.jpg"
-					/>
-				</CarouselContent>
+				<CarouselContent>{items}</CarouselContent>
 				<CarouselPrevious />
 				<CarouselNext />
 			</Carousel>
@@ -43,6 +70,7 @@ export function Gallery() {
 }
 
 interface GalleryPicture {
+	id: number;
 	title: string;
 	locationName: string;
 	imgSrc: string;
@@ -168,6 +196,7 @@ export function GalleryUploadForm() {
 										onChange={(event) => {
 											field.onChange(event.target.files![0]);
 										}}
+										accept=".jpg,.jpeg"
 										id="image"
 									/>
 								</FormControl>
