@@ -36,10 +36,13 @@ type User struct {
 	ID        uint32 `json:"id"`
 }
 
-type PictureNoID struct {
+type PictureUpload struct {
 	Title        string `json:"title"`
 	LocationName string `json:"locationName"`
-	ImgSrc       string `json:"imgSrc"`
+}
+type PictureNoID struct {
+	PictureUpload
+	ImgSrc string `json:"imgSrc"`
 }
 type Picture struct {
 	PictureNoID
