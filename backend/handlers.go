@@ -220,6 +220,28 @@ func createThought(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func fetchAllPictures(w http.ResponseWriter, r *http.Request) {
+	pictures, err := models.AllPictures()
+	if err == models.ErrResourceNotFound {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	} else if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	responseJSON, err := json.Marshal(pictures)
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
+
 func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	var p models.PictureUpload
 
