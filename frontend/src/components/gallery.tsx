@@ -145,11 +145,11 @@ export function GalleryUploadForm() {
 				<FormField
 					control={form.control}
 					name="image"
-					render={() => (
+					render={({ field }) => (
 						<FormItem>
 							<FormLabel hidden>Image</FormLabel>
 							<FormControl>
-								<InputFile />
+								<InputFile {...field} />
 							</FormControl>
 							<FormDescription hidden>
 								This is the picture you are submitting
