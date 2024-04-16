@@ -1,11 +1,4 @@
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "./ui/card";
-import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
