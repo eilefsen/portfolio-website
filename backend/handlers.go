@@ -2,9 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"eilefsen.net/backend/models"
@@ -220,7 +223,42 @@ func createThought(w http.ResponseWriter, r *http.Request) {
 func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	var p models.PictureUpload
 
-	err := json.NewDecoder(r.Body).Decode(&p)
+	const MAX_UPLOAD_SIZE = (1024 * 1024) * 8 // 8MB
+	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
+	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
+		http.Error(w, "The uploaded file is too big. Please choose an file that's less than 1MB in size", http.StatusBadRequest)
+		return
+	}
+
+	file, fileHeader, err := r.FormFile("image")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	err = os.MkdirAll("./uploads", os.ModePerm)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	dst, err := os.Create(fmt.Sprintf("./uploads/%d%s", time.Now().Unix(), filepath.Ext(fileHeader.Filename)))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer dst.Close()
+
+	// Copy the uploaded file to the filesystem
+	// at the specified destination
+	_, err = io.Copy(dst, file)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -229,7 +267,7 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	var pic models.PictureNoID
 	pic.PictureUpload = p
 
-	pic.ImgSrc = "" // TODO :Save file
+	pic.ImgSrc = dst.Name()
 
 	insertedPicture, err := models.NewPicture(pic)
 	if err != nil {
