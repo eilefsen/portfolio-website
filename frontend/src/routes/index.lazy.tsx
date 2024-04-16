@@ -2,8 +2,7 @@ import { SadGirlsRingBanner } from "@/components/sadgirlsring";
 import { Section, Paragraph } from "@/components/section";
 import { ThoughtForm } from "@/components/thoughts/form";
 import { ThoughtsSection } from "@/components/thoughts/section";
-import { CentralHr } from "@/components/util";
-import { Gallery } from "@/components/gallery";
+import { Gallery, GalleryUploadForm } from "@/components/gallery";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
@@ -21,8 +20,10 @@ function Index() {
 			<StaticPage />
 			<ThoughtsSection />
 			{result.data && <ThoughtForm />}
-			<CentralHr className="my-4" />
+			<div className="py-2" />
 			<Gallery />
+			<div className="py-1" />
+			{result.data && <GalleryUploadForm />}
 		</>
 	);
 }
