@@ -2,7 +2,7 @@ import { SadGirlsRingBanner } from "@/components/sadgirlsring";
 import { Section, Paragraph } from "@/components/section";
 import { ThoughtForm } from "@/components/thoughts/form";
 import { ThoughtsSection } from "@/components/thoughts/section";
-import { CentralHr, LeftHr } from "@/components/util";
+import { CentralHr } from "@/components/util";
 import { Gallery } from "@/components/gallery";
 import { useQuery } from "@tanstack/react-query";
 import { createLazyFileRoute } from "@tanstack/react-router";

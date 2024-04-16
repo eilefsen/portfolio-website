@@ -6,8 +6,7 @@ import {
 	CarouselPrevious,
 } from "./ui/carousel";
 
-interface GalleryProps {}
-export function Gallery(props: GalleryProps) {
+export function Gallery() {
 	return (
 		<Carousel>
 			<CarouselContent>
