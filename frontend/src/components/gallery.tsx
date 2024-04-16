@@ -120,7 +120,14 @@ export function GalleryUploadForm() {
 						<FormItem>
 							<FormLabel hidden>Title</FormLabel>
 							<FormControl>
-								<Input placeholder="Title" {...field} />
+								<Input
+									placeholder="Title"
+									name={field.name}
+									onBlur={field.onBlur}
+									disabled={field.disabled}
+									value={field.value?.fileName}
+									onChange={field.onChange}
+								/>
 							</FormControl>
 							<FormDescription hidden>
 								This is the title of the picture you are submitting
@@ -148,25 +155,29 @@ export function GalleryUploadForm() {
 				<FormField
 					control={form.control}
 					name="image"
-					render={({ field: { value, onChange, ...field } }) => (
-						<FormItem>
-							<FormLabel hidden>Image</FormLabel>
-							<FormControl>
-								<InputFile
-									{...field}
-									value={value?.fileName}
-									onChange={(event) => {
-										onChange(event.target.files![0]);
-									}}
-									id="image"
-								/>
-							</FormControl>
-							<FormDescription hidden>
-								This is the picture you are submitting
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
+					render={({ field }) => {
+						return (
+							<FormItem>
+								<FormLabel hidden>Image</FormLabel>
+								<FormControl>
+									<InputFile
+										name={field.name}
+										onBlur={field.onBlur}
+										disabled={field.disabled}
+										value={field.value?.fileName}
+										onChange={(event) => {
+											field.onChange(event.target.files![0]);
+										}}
+										id="image"
+									/>
+								</FormControl>
+								<FormDescription hidden>
+									This is the picture you are submitting
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
 				/>
 				<Button type="submit">Submit</Button>
 			</form>
