@@ -32,7 +32,7 @@ function StaticPage() {
 				<Paragraph heading="Who am i?">
 					<img
 						className="float-start me-6 mt-2 w-32 rounded-full shadow-md shadow-neutral-400 [shape-outside:circle()]"
-						src="/profile_pic.jpg"
+						src="/img/profile_pic.jpg"
 						alt="A picture of me!"
 					/>
 					My name is Emma, and I am a young
@@ -69,7 +69,7 @@ function StaticPage() {
 					This is a fairly basic HTTP client for the ESP32.
 					<img
 						className="float-start me-3 mt-1 h-40 rounded-sm shadow-md shadow-neutral-400"
-						src="/esp_http_client.gif"
+						src="/img/esp_http_client.gif"
 						alt="A picture of Dotify on mobile"
 					/>{" "}
 					The microcontroller drives a sh1106 OLED display. The purpose is to
@@ -98,7 +98,7 @@ function StaticPage() {
 					Go.{" "}
 					<img
 						className="float-start me-3 mt-1 h-48 rounded-sm shadow-md shadow-neutral-400"
-						src="/dotify.jpg"
+						src="/img/dotify.jpg"
 						alt="A picture of Dotify on mobile"
 					/>
 					The songs are stored as simple audio files in static storage, and
