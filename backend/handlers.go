@@ -216,3 +216,30 @@ func createThought(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(responseJSON)
 }
+
+func uploadPicture(w http.ResponseWriter, r *http.Request) {
+	var p models.PictureUpload
+
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var pic models.PictureNoID
+	pic.PictureUpload = p
+
+	pic.ImgSrc = "" // TODO :Save file
+
+	insertedPicture, err := models.NewPicture(pic)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+	responseJSON, err := json.Marshal(insertedPicture)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+	slog.Debug("uploadPicture", "picture", p, "insertedPicture", insertedPicture, "responseJSON", string(responseJSON))
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
