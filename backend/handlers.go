@@ -223,15 +223,16 @@ func createThought(w http.ResponseWriter, r *http.Request) {
 func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	var p models.PictureUpload
 
-	const MAX_UPLOAD_SIZE = (1024 * 1024) * 8 // 8MB
+	const MAX_UPLOAD_SIZE = (1024 * 8) * 1024 // 8MB
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
-		http.Error(w, "The uploaded file is too big. Please choose an file that's less than 1MB in size", http.StatusBadRequest)
+		http.Error(w, "The uploaded file is too big. Please choose an file that's less than 8MB in size", http.StatusBadRequest)
 		return
 	}
 
 	file, fileHeader, err := r.FormFile("image")
 	if err != nil {
+		slog.Debug("uploadPicture: Failed to retrieve image from form")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -239,12 +240,14 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 
 	err = os.MkdirAll("./uploads", os.ModePerm)
 	if err != nil {
+		slog.Debug("uploadPicture: Failed to make directory")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	dst, err := os.Create(fmt.Sprintf("./uploads/%d%s", time.Now().Unix(), filepath.Ext(fileHeader.Filename)))
 	if err != nil {
+		slog.Debug("uploadPicture: Failed to create file")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -254,12 +257,14 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	// at the specified destination
 	_, err = io.Copy(dst, file)
 	if err != nil {
+		slog.Debug("uploadPicture: Failed to copy file to destination")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
+		slog.Debug("uploadPicture: Failed to copy file to destination")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
