@@ -81,8 +81,8 @@ export function GalleryUploadForm() {
 
 	const mutation = useMutation({
 		mutationKey: ["picturesUpload"],
-		mutationFn: (val: any) => {
-			return axios.post("/api/upload/picture", val);
+		mutationFn: (val: GalleryPictureUpload) => {
+			return axios.post("/api/img/upload", val);
 		},
 		onSuccess: (data: AxiosResponse<GalleryPicture>) => {
 			form.reset();
@@ -96,7 +96,7 @@ export function GalleryUploadForm() {
 		},
 	});
 
-	function onSubmit(values: any) {
+	function onSubmit(values: GalleryPictureUpload) {
 		mutation.mutate(values);
 	}
 
