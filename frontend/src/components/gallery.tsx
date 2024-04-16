@@ -75,14 +75,17 @@ function GalleryCarouselItem(props: GalleryCarouselItemProps) {
 }
 
 export function GalleryUploadForm() {
-	const form = useForm<GalleryPictureUpload>();
+	const form = useForm();
 
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
 		mutationKey: ["picturesUpload"],
-		mutationFn: (val: GalleryPictureUpload) => {
-			return axios.post("/api/img/upload", val);
+		mutationFn: (data: GalleryPictureUpload) => {
+			const formData = new FormData();
+			formData.append("image", data.image);
+			formData.append("data", JSON.stringify(data));
+			return axios.post("/api/img/upload", formData);
 		},
 		onSuccess: (data: AxiosResponse<GalleryPicture>) => {
 			form.reset();
@@ -96,7 +99,7 @@ export function GalleryUploadForm() {
 		},
 	});
 
-	function onSubmit(values: GalleryPictureUpload) {
+	function onSubmit(values: any) {
 		mutation.mutate(values);
 	}
 
@@ -145,11 +148,18 @@ export function GalleryUploadForm() {
 				<FormField
 					control={form.control}
 					name="image"
-					render={({ field }) => (
+					render={({ field: { value, onChange, ...field } }) => (
 						<FormItem>
 							<FormLabel hidden>Image</FormLabel>
 							<FormControl>
-								<InputFile {...field} />
+								<InputFile
+									{...field}
+									value={value?.fileName}
+									onChange={(event) => {
+										onChange(event.target.files![0]);
+									}}
+									id="image"
+								/>
 							</FormControl>
 							<FormDescription hidden>
 								This is the picture you are submitting

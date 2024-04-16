@@ -226,6 +226,7 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 	const MAX_UPLOAD_SIZE = (1024 * 8) * 1024 // 8MB
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
+		slog.Debug("uploadPicture", "err", err)
 		http.Error(w, "The uploaded file is too big. Please choose an file that's less than 8MB in size", http.StatusBadRequest)
 		return
 	}
@@ -262,9 +263,9 @@ func uploadPicture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.NewDecoder(r.Body).Decode(&p)
+	err = json.Unmarshal([]byte(r.FormValue("data")), &p)
 	if err != nil {
-		slog.Debug("uploadPicture: Failed to copy file to destination")
+		slog.Debug("uploadPicture: Failed to decode body", "err", err, "body", r.Body)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
