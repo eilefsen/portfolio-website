@@ -22,7 +22,7 @@ type JWTSettings struct {
 
 var settings = JWTSettings{
 	SigningMethod: jwt.SigningMethodHS256,
-	Key:           []byte(uuid.New().String()),
+	Key:           []byte(uuid.New().String()), // TODO: replace uuid with more secure alternative
 }
 
 func NewToken(u models.User) *jwt.Token {
