@@ -8,7 +8,8 @@ interface SectionProps {
 }
 
 export function Section(props: PropsWithChildren<SectionProps>) {
-	const headingClassName = "-mb-0.5 inline w-full pt-8 text-left text-4xl";
+	const headingClassName =
+		"-mb-0.5 inline w-full pt-8 text-left text-4xl smallcaps font-bold";
 	let headingElement = <h2 className={headingClassName}>{props.heading}</h2>;
 	if (props.id) {
 		const url = "/#" + props.id;

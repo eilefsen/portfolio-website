@@ -13,10 +13,8 @@
 	text-align: center;
 	@apply max-w-screen-lg;
 }
-h1,
-h2 {
+.smallcaps {
 	font-family: "Cormorant SC", serif;
-	font-weight: 700;
 }
 
 a,

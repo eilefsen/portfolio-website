@@ -58,7 +58,7 @@ export default function App() {
 function Header() {
 	return (
 		<header className="pb-4">
-			<h1 className="-mb-1 text-7xl">
+			<h1 className="smallcaps -mb-1 text-7xl font-bold">
 				<Link to="/" className="not-italic no-underline">
 					Eilefsen
 				</Link>
