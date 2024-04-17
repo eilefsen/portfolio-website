@@ -20,6 +20,8 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { CentralHr } from "./util";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import Autoplay from "embla-carousel-autoplay";
+import ClassNames from "embla-carousel-class-names";
 import axios, { AxiosResponse } from "axios";
 import { Section } from "./section";
 import { InputFile } from "./ui/inputfile";
@@ -60,7 +62,18 @@ export function Gallery() {
 
 	return (
 		<Section id="gallery" heading="Gallery">
-			<Carousel>
+			<Carousel
+				opts={{
+					align: "center",
+					loop: true,
+				}}
+				plugins={[
+					Autoplay({
+						delay: 5000,
+					}),
+					ClassNames({ snapped: "opacity-100" }),
+				]}
+			>
 				<CarouselContent>{items}</CarouselContent>
 				<CarouselPrevious />
 				<CarouselNext />
@@ -88,7 +101,7 @@ interface GalleryCarouselItemProps {
 }
 function GalleryCarouselItem(props: GalleryCarouselItemProps) {
 	return (
-		<CarouselItem>
+		<CarouselItem className="basis-11/12 opacity-50 transition-opacity duration-700">
 			<div>
 				<h3 className="smallcaps text-3xl font-bold leading-none">
 					«{props.title}»
@@ -96,7 +109,7 @@ function GalleryCarouselItem(props: GalleryCarouselItemProps) {
 				<h4 className="pb-2 text-lg font-light leading-none">
 					{props.locationName}
 				</h4>
-				<img src={props.imgSrc} alt={props.title} />
+				<img src={props.imgSrc} className="rounded-lg" alt={props.title} />
 			</div>
 		</CarouselItem>
 	);
