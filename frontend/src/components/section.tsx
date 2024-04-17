@@ -76,7 +76,7 @@ export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
 	}
 
 	return (
-		<div className="break-inside-avoid-column pb-4">
+		<article className="break-inside-avoid-column pb-4">
 			<div className="text-left">
 				<h3 className="inline text-2xl font-bold">{headingElement}</h3>{" "}
 				<span className="pl-1 text-neutral-500">{props.date}</span>
@@ -85,6 +85,6 @@ export function Paragraph(props: PropsWithChildren<ParagraphProps>) {
 			<div className="hyphens-auto text-pretty text-justify text-xl">
 				{props.children}
 			</div>
-		</div>
+		</article>
 	);
 }
